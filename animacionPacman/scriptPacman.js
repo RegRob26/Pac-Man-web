@@ -13,10 +13,10 @@ let inc = 0;
 const cantInc = 20;
 const y = canvas.height;
 let direccion = 0;
-let xBarrera = 150;
-let yBarrera = 50;
-let anchuraBarrera = 20;
-let alturaBarrera = 3;
+let xBarrera = 600;
+let yBarrera = 400;
+let anchuraBarrera = 30;
+let alturaBarrera = 5;
 let barreraBool = false;
 let resourceX = 492;
 const resourceY = 60;
@@ -27,12 +27,17 @@ let keyBackup = 1;
 let tolerancia = 0;
 let c, r;
 let nivel = 0;
-let barrerasMatriz = [[
-                        [{estado: 1, separacion: 0}, {estado: 1, separacion: 0}, {estado: 1, separacion: 0},
-                        {estado: 0, separacion: 0}, {estado: 0, separacion: 0}, {estado: 0, separacion: 0}],
+let tipo = [21,16,102,4,36,36,24,16]
+let barrerasMatriz = [
+    [
+                        [{estado: 1, separacion: 0, tipo: 0}, {estado: 1, separacion: 0, tipo: 0}, {estado: 1, separacion: 0, tipo: 0},
+                        {estado: 0, separacion: 0, tipo: 0}, {estado: 0, separacion: 0, tipo: 0}, {estado: 0, separacion: 0, tipo: 0}],
                         [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
-                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}]
-]
+                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
+                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
+                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
+                        [{estado: 0}, {estado: 1, separacion: 0,tipo: 4}, {estado: 0}, {estado: 1, separacion: 0,tipo: 4}, {estado: 0}, {estado: 0}]
+    ]
 
 ];
 
@@ -41,23 +46,17 @@ document.addEventListener('keydown', manejarTecladoAbajo, false);
 setInterval(dibujar, 40, key)
 
 function manejarTecladoAbajo(e) {
-    console.log(e.keyCode)
     if (e.keyCode === 39) {
-        console.log("Mover a la derecha");
         key = 39;
     }
     if (e.keyCode === 37) {
-        console.log("Mover a la izquierda");
         key = 37;
-
     }
     if (e.keyCode === 38) {
         key = 38;
-        console.log("Mover hacia arriba");
     }
     if (e.keyCode === 40) {
         key = 40;
-        console.log("Mover hacia abajo");
     }
 }
 
@@ -68,8 +67,6 @@ function dibujar(direccion) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     dibujaBarrera();
     detectarBarrera();
-    console.log("keys", key, keyBackup);
-
     if (key === 39) {
         ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
         if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
@@ -138,20 +135,16 @@ function dibujaBarrera() {
             ctx.fill();
             ctx.closePath();
         }*/
-    console.log("barreralenght", barrerasMatriz[nivel].length);
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
-        console.log("CLENGHT", barrerasMatriz[nivel][c].length)
-
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
-            console.log("c,r", c,r);
-            console.log(barrerasMatriz[nivel][c][r].estado);
             if (barrerasMatriz[nivel][c][r].estado !== 0) {
-                let xBarrera = (r * (anchuraBarrera + barrerasMatriz[nivel][c][r].separacion));
-                let yBarrera = (c * (alturaBarrera + barrerasMatriz[nivel][c][r].separacion));
+                let accesoBloque = barrerasMatriz[nivel][c][r];
+                let xBarrera = (r * (anchuraBarrera + accesoBloque.separacion));
+                let yBarrera = (c * (alturaBarrera + accesoBloque.separacion));
                 barrerasMatriz[nivel][c][r].x = xBarrera;
                 barrerasMatriz[nivel][c][r].y = yBarrera;
                 ctx.beginPath();
-                ctx.drawImage(img, 21, 16, 19, 4, xBarrera, yBarrera, anchuraBarrera, alturaBarrera);
+                ctx.drawImage(img, tipo[accesoBloque.tipo],  tipo[accesoBloque.tipo+1], tipo[accesoBloque.tipo+2], tipo[accesoBloque.tipo+3], xBarrera, yBarrera,  tipo[accesoBloque.tipo+2], tipo[accesoBloque.tipo+3]);
                 //ctx.rect(xBarrera, yBarrera, anchuraBarrera, alturaBarrera);
                 ctx.fillStyle = "blue";
                 ctx.fill();
@@ -163,9 +156,13 @@ function dibujaBarrera() {
 }
 
 function detectarBarrera() {
-    console.log(xActual, yActual, yBarrera + alturaBarrera, xBarrera + anchuraBarrera)
-    if ((xActual >= xBarrera - pacmanTam - 3) && yActual <= yBarrera + alturaBarrera + 3 && (xActual <= xBarrera + anchuraBarrera) && yActual >= yBarrera - pacmanTam - 3) {
-        return barreraBool = true;
+    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
+        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
+            let accesoBloque = barrerasMatriz[nivel][c][r];
+            if ((xActual >= accesoBloque.x - pacmanTam - 3) && yActual <= accesoBloque.y +  tipo[accesoBloque.tipo+3] + 3 && (xActual <= accesoBloque.x +  tipo[accesoBloque.tipo+2]  ) && yActual >= accesoBloque.y - pacmanTam - 3) {
+                return barreraBool = true;
+            }
+            barreraBool = false;
+        }
     }
-    barreraBool = false;
 }
