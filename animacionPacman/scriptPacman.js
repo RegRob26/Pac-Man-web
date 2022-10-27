@@ -15,15 +15,26 @@ const y = canvas.height;
 let direccion = 0;
 let xBarrera = 150;
 let yBarrera = 50;
-let anchuraBarrera = 30;
-let alturaBarrera = 10;
+let anchuraBarrera = 20;
+let alturaBarrera = 3;
 let barreraBool = false;
 let resourceX = 492;
 const resourceY = 60;
 const pacmanTam = 13;
 const pacmanCantiMov = 3.75;
 const barrera = canvas.width;
+let keyBackup = 1;
+let tolerancia = 0;
+let c, r;
+let nivel = 0;
+let barrerasMatriz = [[
+                        [{estado: 1, separacion: 0}, {estado: 1, separacion: 0}, {estado: 1, separacion: 0},
+                        {estado: 0, separacion: 0}, {estado: 0, separacion: 0}, {estado: 0, separacion: 0}],
+                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
+                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}]
+]
 
+];
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 //document.addEventListener('keyup',manejarTecladoArriba, false);
@@ -50,17 +61,14 @@ function manejarTecladoAbajo(e) {
     }
 }
 
-
 //Vamos a definir los valores de las direcciones para cambiar la imagen del pacman
 //2 arriba, 1 izquierda, 0 abajo, 3 derecha
 
 function dibujar(direccion) {
-
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     dibujaBarrera();
     detectarBarrera();
-    console.log(xActual, yActual)
+    console.log("keys", key, keyBackup);
 
     if (key === 39) {
         ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
@@ -82,7 +90,7 @@ function dibujar(direccion) {
 
     if (key === 40) {
         ctx.drawImage(img, resourceX + inc, resourceY + 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanTam + 3, pacmanTam + 3);
-        if ((yActual < y - (pacmanTam + pacmanCantiMov))) {
+        if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             yActual += pacmanCantiMov;
             inc += cantInc;
         } else inc = cantInc;
@@ -91,12 +99,29 @@ function dibujar(direccion) {
 
     if (key === 38) {
         ctx.drawImage(img, resourceX + inc, resourceY - 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanTam + 3, pacmanTam + 3);
-        if ((yActual > 0 && yActual < barrera)) {
+        if ((yActual > 0 && yActual < barrera) && !barreraBool) {
             yActual -= pacmanCantiMov;
             inc += cantInc;
         } else inc = cantInc;
         if (inc > 60) inc = 0;
     }
+
+    if (barreraBool && key !== keyBackup) {
+        if (key === 39) {
+            xActual += pacmanCantiMov + 5;
+        }
+        if (key === 37) {
+            xActual -= pacmanCantiMov;
+        }
+        if (key === 40) {
+            yActual += pacmanCantiMov + 5;
+        }
+        if (key === 38) {
+            yActual -= pacmanCantiMov;
+        }
+    }
+    keyBackup = key;
+
 }
 
 //En esta seccion del codigo encontraremos los casos para los escenarios segun el nivel, como ahora no existe tal situacion
@@ -106,16 +131,40 @@ function dibujaEscenario() {
 }
 
 function dibujaBarrera() {
-    console.log("dibuja barrera");
-    ctx.beginPath();
-    ctx.rect(xBarrera, yBarrera, anchuraBarrera, alturaBarrera);
-    ctx.fillStyle = "white";
-    ctx.fill();
-    ctx.closePath();
+    /*    for (let i = 0; i<3;i++){
+            ctx.beginPath();
+            ctx.rect(xBarrera*i, yBarrera, anchuraBarrera, alturaBarrera);
+            ctx.fillStyle = "white";
+            ctx.fill();
+            ctx.closePath();
+        }*/
+    console.log("barreralenght", barrerasMatriz[nivel].length);
+    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
+        console.log("CLENGHT", barrerasMatriz[nivel][c].length)
+
+        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
+            console.log("c,r", c,r);
+            console.log(barrerasMatriz[nivel][c][r].estado);
+            if (barrerasMatriz[nivel][c][r].estado !== 0) {
+                let xBarrera = (r * (anchuraBarrera + barrerasMatriz[nivel][c][r].separacion));
+                let yBarrera = (c * (alturaBarrera + barrerasMatriz[nivel][c][r].separacion));
+                barrerasMatriz[nivel][c][r].x = xBarrera;
+                barrerasMatriz[nivel][c][r].y = yBarrera;
+                ctx.beginPath();
+                ctx.drawImage(img, 21, 16, 19, 4, xBarrera, yBarrera, anchuraBarrera, alturaBarrera);
+                //ctx.rect(xBarrera, yBarrera, anchuraBarrera, alturaBarrera);
+                ctx.fillStyle = "blue";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+    }
+
 }
 
 function detectarBarrera() {
-    if ((xActual >= xBarrera - pacmanTam - 2) && yActual <= yBarrera + alturaBarrera && (xActual <= xBarrera + anchuraBarrera) && yActual >= yBarrera - pacmanTam) {
+    console.log(xActual, yActual, yBarrera + alturaBarrera, xBarrera + anchuraBarrera)
+    if ((xActual >= xBarrera - pacmanTam - 3) && yActual <= yBarrera + alturaBarrera + 3 && (xActual <= xBarrera + anchuraBarrera) && yActual >= yBarrera - pacmanTam - 3) {
         return barreraBool = true;
     }
     barreraBool = false;
