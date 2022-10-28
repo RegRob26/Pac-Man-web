@@ -27,19 +27,28 @@ let keyBackup = 1;
 let tolerancia = 0;
 let c, r;
 let nivel = 0;
-let tipo = [21,16,102,4,36,36,24,16]
+let tipo = [21, 16, 102, 4, 36, 36, 24, 16, 76, 68, 8, 56, 16,20,4,71,21, 16, 51, 4,];
 let barrerasMatriz = [
     [
-                        [{estado: 1, separacion: 0, tipo: 0}, {estado: 1, separacion: 0, tipo: 0}, {estado: 1, separacion: 0, tipo: 0},
-                        {estado: 0, separacion: 0, tipo: 0}, {estado: 0, separacion: 0, tipo: 0}, {estado: 0, separacion: 0, tipo: 0}],
-                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
-                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
-                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
-                        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
-                        [{estado: 0}, {estado: 1, separacion: 0,tipo: 4}, {estado: 0}, {estado: 1, separacion: 0,tipo: 4}, {estado: 0}, {estado: 0}]
+        //Tabla de tipos
+        /*
+        * tipo 0 barra horizontal completa
+        * tipo 4 Rectangulos del escenario
+        * tipo 8 Barra vertical con hueco
+        * tipo 12 Barra vertical completa
+        * tipo 16 Barra horizontal mitad
+        * */
+        [{estado: 1, separacion: 0, tipo: 0}],
+        [{estado: 1,separacion: pacmanTam,tipo: 12}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
+        [{estado: 0}, {estado: 1, separacion: 0, tipo: 4}, {estado: 0}, {estado: 1,separacion: 0,tipo: 4}, {estado: 0}, {estado: 0}],
+        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
+        [{estado:  0}, {estado: 1, separacion: pacmanTam, tipo: 4}, {estado: 0}, {estado: 1,separacion: pacmanTam,tipo: 8}, {estado: 1,separacion: pacmanTam,tipo:0}, {estado: 0}],
+        [{estado: 0}, {estado: 0}, {estado: 0},  {estado: 1,separacion: pacmanTam+15,tipo: 16}, {estado: 0}, {estado: 0}],
+        [{estado: 1, separacion: 25,tipo: 16}, {estado: 0}, {estado: 1,separacion: pacmanTam+15,tipo: 12},{estado: 0}, {estado: 0}, {estado: 0}]
     ]
-
 ];
+
+ctx.translate
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 //document.addEventListener('keyup',manejarTecladoArriba, false);
@@ -68,12 +77,18 @@ function dibujar(direccion) {
     dibujaBarrera();
     detectarBarrera();
     if (key === 39) {
+
+        ctx.save();
+        ctx.translate(xActual,yActual);
+        ctx.rotate((0*90*Math.PI)/180);
         ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
+        ctx.restore();
+/*        ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
         if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             xActual += pacmanCantiMov;
             inc += cantInc - 1;
         } else inc = cantInc;
-        if (inc > 60) inc = 0;
+        if (inc > 60) inc = 0;*/
     }
 
     if (key === 37) {
@@ -128,30 +143,25 @@ function dibujaEscenario() {
 }
 
 function dibujaBarrera() {
-    /*    for (let i = 0; i<3;i++){
-            ctx.beginPath();
-            ctx.rect(xBarrera*i, yBarrera, anchuraBarrera, alturaBarrera);
-            ctx.fillStyle = "white";
-            ctx.fill();
-            ctx.closePath();
-        }*/
+
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
             if (barrerasMatriz[nivel][c][r].estado !== 0) {
                 let accesoBloque = barrerasMatriz[nivel][c][r];
-                let xBarrera = (r * (anchuraBarrera + accesoBloque.separacion));
-                let yBarrera = (c * (alturaBarrera + accesoBloque.separacion));
-                barrerasMatriz[nivel][c][r].x = xBarrera;
-                barrerasMatriz[nivel][c][r].y = yBarrera;
+                let xBarrera = (r * 30);
+                let yBarrera = (c * 16);
+                accesoBloque.x = xBarrera;
+                accesoBloque.y = yBarrera;
                 ctx.beginPath();
-                ctx.drawImage(img, tipo[accesoBloque.tipo],  tipo[accesoBloque.tipo+1], tipo[accesoBloque.tipo+2], tipo[accesoBloque.tipo+3], xBarrera, yBarrera,  tipo[accesoBloque.tipo+2], tipo[accesoBloque.tipo+3]);
-                //ctx.rect(xBarrera, yBarrera, anchuraBarrera, alturaBarrera);
+                console.log("acceso tipo vertical", accesoBloque,r,c)
+                ctx.drawImage(img, tipo[accesoBloque.tipo], tipo[accesoBloque.tipo + 1], tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3], xBarrera, yBarrera+accesoBloque.separacion, tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3]);
                 ctx.fillStyle = "blue";
                 ctx.fill();
                 ctx.closePath();
             }
         }
     }
+    console.log(barrerasMatriz);
 
 }
 
@@ -159,7 +169,7 @@ function detectarBarrera() {
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
             let accesoBloque = barrerasMatriz[nivel][c][r];
-            if ((xActual >= accesoBloque.x - pacmanTam - 3) && yActual <= accesoBloque.y +  tipo[accesoBloque.tipo+3] + 3 && (xActual <= accesoBloque.x +  tipo[accesoBloque.tipo+2]  ) && yActual >= accesoBloque.y - pacmanTam - 3) {
+            if ((xActual >= accesoBloque.x - pacmanTam - 3) && yActual <= accesoBloque.y + tipo[accesoBloque.tipo + 3] + 3 +accesoBloque.separacion  && (xActual <= accesoBloque.x + tipo[accesoBloque.tipo + 2]) && yActual >= accesoBloque.y - pacmanTam - 3 + accesoBloque.separacion ) {
                 return barreraBool = true;
             }
             barreraBool = false;
