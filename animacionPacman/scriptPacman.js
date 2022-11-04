@@ -2,10 +2,14 @@ let canvas = document.getElementById("pacmanCanvas");
 let ctx = canvas.getContext('2d');
 let img = new Image();
 img.src = "resource.png";
+let imgTile = new Image();
+imgTile.src = "newResource.png"
+
+
 let x = canvas.width;
 let key = 0;
-let xActual = 0;
-let yActual = 0;
+let xActual = 110;
+let yActual = 100;
 
 let movimiento = 1;
 let indice = 0;
@@ -27,32 +31,17 @@ let keyBackup = 1;
 let tolerancia = 0;
 let c, r;
 let nivel = 0;
-let tipo = [21, 16, 102, 4, 36, 36, 24, 16, 76, 68, 8, 56, 16,20,4,71,21, 16, 51, 4,];
-let barrerasMatriz = [
-    [
-        //Tabla de tipos
-        /*
-        * tipo 0 barra horizontal completa
-        * tipo 4 Rectangulos del escenario
-        * tipo 8 Barra vertical con hueco
-        * tipo 12 Barra vertical completa
-        * tipo 16 Barra horizontal mitad
-        * */
-        [{estado: 1, separacion: 0, tipo: 0}],
-        [{estado: 1,separacion: pacmanTam,tipo: 12}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
-        [{estado: 0}, {estado: 1, separacion: 0, tipo: 4}, {estado: 0}, {estado: 1,separacion: 0,tipo: 4}, {estado: 0}, {estado: 0}],
-        [{estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}, {estado: 0}],
-        [{estado:  0}, {estado: 1, separacion: pacmanTam, tipo: 4}, {estado: 0}, {estado: 1,separacion: pacmanTam,tipo: 8}, {estado: 1,separacion: pacmanTam,tipo:0}, {estado: 0}],
-        [{estado: 0}, {estado: 0}, {estado: 0},  {estado: 1,separacion: pacmanTam+15,tipo: 16}, {estado: 0}, {estado: 0}],
-        [{estado: 1, separacion: 25,tipo: 16}, {estado: 0}, {estado: 1,separacion: pacmanTam+15,tipo: 12},{estado: 0}, {estado: 0}, {estado: 0}]
-    ]
-];
+let newTam = 13;
+//let tipo = [21, 16, 102, 4, 36, 36, 24, 16, 76, 68, 8, 56, 16, 20, 4, 71, 21, 16, 51, 4,];
 
-ctx.translate
+            //Barra horizontal, barra vertical, barra HyV curva, invertida de anterior
+
+
+//let coord = [[315, 0], [243,0], [252,0], [297,0],[306,0]]
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 //document.addEventListener('keyup',manejarTecladoArriba, false);
-setInterval(dibujar, 40, key)
+setInterval(dibujar, 60, key)
 
 function manejarTecladoAbajo(e) {
     if (e.keyCode === 39) {
@@ -73,22 +62,15 @@ function manejarTecladoAbajo(e) {
 //2 arriba, 1 izquierda, 0 abajo, 3 derecha
 
 function dibujar(direccion) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    dibujaBarrera();
+
     detectarBarrera();
     if (key === 39) {
-
-        ctx.save();
-        ctx.translate(xActual,yActual);
-        ctx.rotate((0*90*Math.PI)/180);
         ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
-        ctx.restore();
-/*        ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
         if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             xActual += pacmanCantiMov;
             inc += cantInc - 1;
         } else inc = cantInc;
-        if (inc > 60) inc = 0;*/
+        if (inc > 60) inc = 0;
     }
 
     if (key === 37) {
@@ -134,6 +116,182 @@ function dibujar(direccion) {
     }
     keyBackup = key;
 
+
+
+
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dibujaBarrera();
+    detectarBarrera();
+/*    if (barreraBool && key !== keyBackup) {
+        console.log(xActual)
+        if (key === 39) {
+            let xtemp = xActual
+            xActual += pacmanCantiMov +5
+            console.log("xactual", xActual)
+            detectarBarrera()
+            if (!barreraBool) {
+                key = keyBackup
+                xActual = xtemp
+                barreraBool = false
+            }
+            else{
+                xActual = xActual -5
+                barreraBool = false
+            }
+        }
+        if (key === 37) {
+            let xtemp = xActual
+            xActual -= pacmanCantiMov - 5
+            console.log("xactual", xActual)
+            detectarBarrera()
+            if (!barreraBool) {
+                key = keyBackup
+                xActual = xtemp
+                barreraBool = true
+            }
+            else{
+                xActual = xActual +5
+                barreraBool = false
+            }
+            xActual -= pacmanCantiMov;
+        }
+        if (key === 40) {
+
+            let ytemp = yActual
+
+            yActual += pacmanCantiMov +5
+            detectarBarrera()
+            console.log("detecta: ", barreraBool)
+            if (!barreraBool) {
+                key = keyBackup
+                yActual = ytemp
+                barreraBool = true
+            }
+            else{
+                yActual = yActual - 5
+                barreraBool = false
+
+            }
+
+            yActual += pacmanCantiMov + 5;
+        }
+        if (key === 38) {
+            let ytemp = yActual
+            yActual -= pacmanCantiMov - 5
+            detectarBarrera()
+            if (!barreraBool) {
+                key = keyBackup
+                yActual = ytemp
+                barreraBool = true
+            }
+            else{
+                yActual = yActual + 5
+                barreraBool = false
+
+            }
+            yActual -= pacmanCantiMov;
+        }
+        console.log(barreraBool)
+    }*/
+    detectarBarrera()
+    if (barreraBool && key !== keyBackup) {
+        if (key === 39) {
+
+            ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, newTam, newTam);
+            if ((xActual < x - (newTam + pacmanCantiMov)) && !barreraBool) {
+                xActual += pacmanCantiMov;
+                inc += cantInc - 1;
+            } else inc = cantInc;
+            if (inc > 60) inc = 0;
+        }
+
+        if (key === 37) {
+            ctx.drawImage(img, resourceX + inc, resourceY + 58, pacmanTam, pacmanTam, xActual, yActual, newTam, newTam);
+            if ((xActual > 0) && !barreraBool) {
+                xActual -= pacmanCantiMov;
+                inc += cantInc;
+            } else inc = cantInc;
+            if (inc > 60) inc = 0;
+        }
+
+        if (key === 40) {
+            ctx.drawImage(img, resourceX + inc, resourceY + 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, newTam, newTam);
+            if ((yActual < y - (pacmanTam)) && !barreraBool) {
+                yActual += pacmanCantiMov;
+                inc += cantInc;
+            } else inc = cantInc;
+            if (inc > 60) inc = 0;
+        }
+
+        if (key === 38) {
+            ctx.drawImage(img, resourceX + inc, resourceY - 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, newTam, newTam);
+            if ((yActual > 0) && !barreraBool) {
+                yActual -= pacmanCantiMov;
+                inc += cantInc;
+            } else inc = cantInc;
+            if (inc > 60) inc = 0;
+        }
+    }
+    if (key === 39) {
+        xActual += pacmanCantiMov + 5;
+    }
+    if (key === 37) {
+        xActual -= pacmanCantiMov;
+    }
+    if (key === 40) {
+        yActual += pacmanCantiMov + 5;
+    }
+    if (key === 38) {
+        yActual -= pacmanCantiMov;
+    }
+    keyBackup = key;
+}
+
+/*
+    Mapeado de los elementos del tile
+
+
+ */
+
+
+
+let coord = [
+                [225,0], [234,0], [243,0], [252,0], [261,0], [270,0], [279,0], [288,0], [297,0], [306, 0], [315, 0], [324, 0], [333,0], [342, 0], [351, 0], [360, 0],
+                [225,9], [234,9], [243,9], [252,9], [261,9], [270,9], [279,9], [288,9], [297,9], [306, 9], [315, 9], [324, 9], [333,9], [342, 9], [351, 9], [360, 9],
+                [225,18], [234,18], [243,18], [252,18], [261,18], [270,18], [279,18], [288,18], [297,18], [306, 18], [315, 18], [324, 18], [333,18], [342, 18], [351, 18], [360, 18],
+
+            ];
+let barrerasMatriz =
+    [
+        [
+           //   0               1           2           3           4           5           6           7           8               9       10              11          12          13          14      15          16           17            18          19           20          21          22          23          24          25          26          27
+            [{tipo: 1},     {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 8}, {tipo: 9}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 0,},],
+            [{tipo: 3},    {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3},    {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 23,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3},    {tipo: -1}, {tipo: 25}, {tipo: -1,}, {tipo: -1}, {tipo: 24}, {tipo: -1}, {tipo: 25,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 24,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 25}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: 24}, {tipo: -1}, {tipo: 25}, {tipo: -1,}, {tipo: -1}, {tipo: 24}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3},    {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,},  {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
+            [{tipo: 3},    {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo:2,},],
+            [{tipo: 3},    {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14,}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3},    {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 20,},  {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
+            [{tipo: 3},    {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo:2,},],
+            [{tipo: 5},     {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 4,},]
+        ]
+    ]
+
+function vistazoBarrera(coord, tipo){
+    if (key === 39) {
+        xActual += pacmanCantiMov + 5;
+    }
+    if (key === 37) {
+        xActual -= pacmanCantiMov;
+    }
+    if (key === 40) {
+        yActual += pacmanCantiMov + 5;
+    }
+    if (key === 38) {
+        yActual -= pacmanCantiMov;
+    }
 }
 
 //En esta seccion del codigo encontraremos los casos para los escenarios segun el nivel, como ahora no existe tal situacion
@@ -143,25 +301,23 @@ function dibujaEscenario() {
 }
 
 function dibujaBarrera() {
-
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
-            if (barrerasMatriz[nivel][c][r].estado !== 0) {
+            if (barrerasMatriz[nivel][c][r].tipo >= 0) {
                 let accesoBloque = barrerasMatriz[nivel][c][r];
-                let xBarrera = (r * 30);
-                let yBarrera = (c * 16);
+                let xBarrera = (r*12);
+                let yBarrera = (c*12);
                 accesoBloque.x = xBarrera;
                 accesoBloque.y = yBarrera;
                 ctx.beginPath();
-                console.log("acceso tipo vertical", accesoBloque,r,c)
-                ctx.drawImage(img, tipo[accesoBloque.tipo], tipo[accesoBloque.tipo + 1], tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3], xBarrera, yBarrera+accesoBloque.separacion, tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3]);
+                ctx.drawImage(imgTile, coord[accesoBloque.tipo][0], coord[accesoBloque.tipo][1], 7, 7, xBarrera, yBarrera, 12,12)
+                //ctx.drawImage(imgTile, tipo[accesoBloque.tileF][accesoBloque.tileC][0], tipo[accesoBloque.tipo + 1], tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3], xBarrera, yBarrera + accesoBloque.separacion, tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3]);
                 ctx.fillStyle = "blue";
                 ctx.fill();
                 ctx.closePath();
             }
         }
     }
-    console.log(barrerasMatriz);
 
 }
 
@@ -169,10 +325,19 @@ function detectarBarrera() {
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
             let accesoBloque = barrerasMatriz[nivel][c][r];
-            if ((xActual >= accesoBloque.x - pacmanTam - 3) && yActual <= accesoBloque.y + tipo[accesoBloque.tipo + 3] + 3 +accesoBloque.separacion  && (xActual <= accesoBloque.x + tipo[accesoBloque.tipo + 2]) && yActual >= accesoBloque.y - pacmanTam - 3 + accesoBloque.separacion ) {
-                return barreraBool = true;
+            //if ((xActual >= accesoBloque.x - pacmanTam/2 - 3) && yActual <= accesoBloque.y  && (xActual <= accesoBloque.x  && yActual >= accesoBloque.y - pacmanTam/2 - 3) && accesoBloque.tipo >=0 ){
+            if(accesoBloque.tipo >= 0){
+/*                rect1.x < rect2.x + rect2.w &&
+                rect1.x + rect1.w > rect2.x &&
+                rect1.y < rect2.y + rect2.h &&
+                rect1.h + rect1.y > rect2.y*/
+                //if (xActual >= accesoBloque.x-newTam && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
+                if (xActual >= accesoBloque.x-newTam+7 && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
+                    return barreraBool = true;
+                }
+                barreraBool = false;
             }
-            barreraBool = false;
+
         }
     }
 }
