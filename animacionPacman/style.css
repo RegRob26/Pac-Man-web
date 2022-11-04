@@ -1,3 +1,8 @@
 canvas{
     background-color: black;
 }
+
+@font-face {
+    font-family: 'pacman';
+    src: url('press-start-2p-v9-latin-regular.woff') format('truetype');
+}

@@ -5,12 +5,38 @@ img.src = "resource.png";
 let imgTile = new Image();
 imgTile.src = "newResource.png"
 
+let derechaPacman = new Image();
+derechaPacman.src = "pacman_right.png"
+let derechaX = 0
+let derechaY = 0
+
+let izquierdaPacman = new Image();
+izquierdaPacman.src = "pacman_left.png"
+let izquierdaX = 0
+let izquierdaY = 0
+
+let arribaPacman = new Image();
+arribaPacman.src = "pacman_up.png"
+let arribaX = 0
+let arribaY = 0
+
+let abajoPacman = new Image();
+abajoPacman.src = "pacman_down.png"
+let abajoX = 0
+let abajoY = 0
+
+let punto = new Image();
+punto.src = "powerPellet.png"
+
+let ready = new Image();
+ready.src = "ready.png"
 
 let x = canvas.width;
 let key = 0;
-let xActual = 110;
-let yActual = 80;
+let xActual = 100;
+let yActual = 112;
 
+let marcador = 0;
 let movimiento = 1;
 let indice = 0;
 let inc = 0;
@@ -24,8 +50,8 @@ let alturaBarrera = 5;
 let barreraBool = false;
 let resourceX = 492;
 const resourceY = 60;
-const pacmanTam = 13;
-const pacmanImgTam = 6;
+const pacmanTam = 12;
+const pacmanImgTam = 16;
 const pacmanCantiMov = 3.75;
 const barrera = canvas.width;
 let keyBackup = 1;
@@ -42,7 +68,19 @@ let newTam = 13;
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 //document.addEventListener('keyup',manejarTecladoArriba, false);
+
 setInterval(dibujar, 60, key)
+
+function pantallaCarga(){
+    if (indice < 25){
+        ctx.globalAlpha = 1-indice/25;
+        ctx.drawImage(ready,0, 0, 48, 16, canvas.width/2 - 100, canvas.height/2 - 30, 196, 32);
+        ctx.globalAlpha = 1;
+        indice += 2;
+    }
+
+}
+
 
 function manejarTecladoAbajo(e) {
     if (e.keyCode === 39) {
@@ -64,46 +102,49 @@ function manejarTecladoAbajo(e) {
 
 function dibujar(direccion) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pantallaCarga();
     dibujaBarrera();
     detectarBarrera();
-
+    dibujarMarcador();
     if(key !== keyBackup){
         barreraBool = !barreraBool
     }
+    let xtemp = xActual
+    let yTemp = yActual
 
     if (key === 39) {
-        ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanImgTam, pacmanImgTam);
+        ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
         if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             xActual += pacmanCantiMov;
-            inc += cantInc - 1;
-        } else inc = cantInc;
+            inc += cantInc - 4;
+        } else inc = 16;
         if (inc > 60) inc = 0;
     }
 
     if (key === 37) {
-        ctx.drawImage(img, resourceX + inc, resourceY + 58, pacmanTam, pacmanTam, xActual, yActual, pacmanImgTam, pacmanImgTam);
+        ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
         if ((xActual > 0) && !barreraBool) {
             xActual -= pacmanCantiMov;
-            inc += cantInc;
-        } else inc = cantInc;
+            inc += cantInc - 4;
+        } else inc = cantInc - 4;
         if (inc > 60) inc = 0;
     }
 
     if (key === 40) {
-        ctx.drawImage(img, resourceX + inc, resourceY + 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanImgTam + 3, pacmanImgTam + 3);
+        ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
         if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             yActual += pacmanCantiMov;
-            inc += cantInc;
-        } else inc = cantInc;
+            inc += cantInc - 4;
+        } else inc = cantInc - 4;
         if (inc > 60) inc = 0;
     }
 
     if (key === 38) {
-        ctx.drawImage(img, resourceX + inc, resourceY - 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanImgTam + 3, pacmanImgTam + 3);
+        ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
         if ((yActual > 0 && yActual < barrera) && !barreraBool) {
             yActual -= pacmanCantiMov;
-            inc += cantInc;
-        } else inc = cantInc;
+            inc += cantInc - 4;
+        } else inc = cantInc - 4;
         if (inc > 60) inc = 0;
     }
 
@@ -132,10 +173,12 @@ let barrerasMatriz =
     [
         [
            //   0               1           2           3           4           5           6           7           8               9       10              11          12          13          14      15          16           17            18          19           20          21          22          23          24          25          26          27
+            [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
+            [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
             [{tipo: 1},     {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 8}, {tipo: 9}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 0,},],
             [{tipo: 3},    {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
             [{tipo: 3},    {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 23,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
-            [{tipo: 3},    {tipo: -1}, {tipo: 25}, {tipo: -1,}, {tipo: -1}, {tipo: 24}, {tipo: -1}, {tipo: 25,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 24,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 25}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: 24}, {tipo: -1}, {tipo: 25}, {tipo: -1,}, {tipo: -1}, {tipo: 24}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3},    {tipo: -1}, {tipo: 25}, {tipo: -2,}, {tipo: -2}, {tipo: 24}, {tipo: -1}, {tipo: 25,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 24,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 25}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: 24}, {tipo: -1}, {tipo: 25}, {tipo: -2,}, {tipo: -2}, {tipo: 24}, {tipo: -1}, {tipo: 2,},],
             [{tipo: 3},    {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,},  {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
             [{tipo: 3},    {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo:2,},],
             [{tipo: 3},    {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14,}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
@@ -170,18 +213,32 @@ function dibujaEscenario() {
 function dibujaBarrera() {
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
-            if (barrerasMatriz[nivel][c][r].tipo >= 0) {
+            if (barrerasMatriz[nivel][c][r].tipo >= 0 && barrerasMatriz[nivel][c][r].tipo <= 99) {
                 let accesoBloque = barrerasMatriz[nivel][c][r];
-                let xBarrera = (r*12);
-                let yBarrera = (c*12);
+                let xBarrera = (r*16);
+                let yBarrera = (c*16);
                 accesoBloque.x = xBarrera;
                 accesoBloque.y = yBarrera;
                 ctx.beginPath();
-                ctx.drawImage(imgTile, coord[accesoBloque.tipo][0], coord[accesoBloque.tipo][1], 7, 7, xBarrera, yBarrera, 12,12)
+                ctx.drawImage(imgTile, coord[accesoBloque.tipo][0], coord[accesoBloque.tipo][1], 7, 7, xBarrera, yBarrera, 16,16)
                 //ctx.drawImage(imgTile, tipo[accesoBloque.tileF][accesoBloque.tileC][0], tipo[accesoBloque.tipo + 1], tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3], xBarrera, yBarrera + accesoBloque.separacion, tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3]);
                 ctx.fillStyle = "blue";
                 ctx.fill();
                 ctx.closePath();
+            }
+            else{
+                if (barrerasMatriz[nivel][c][r].tipo === -1){
+                    let accesoBloque = barrerasMatriz[nivel][c][r];
+                    let xBarrera = (r*16) + 4;
+                    let yBarrera = (c*16) + 4;
+                    accesoBloque.x = xBarrera;
+                    accesoBloque.y = yBarrera;
+                    console.log("Dibujando punto")
+                    ctx.beginPath();
+                    ctx.drawImage(punto,0, 0, 8, 8, xBarrera, yBarrera, 4,4)
+                    ctx.closePath();
+                }
+
             }
         }
     }
@@ -199,12 +256,39 @@ function detectarBarrera() {
                 rect1.y < rect2.y + rect2.h &&
                 rect1.h + rect1.y > rect2.y*/
                 //if (xActual >= accesoBloque.x-newTam && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
-                if (accesoBloque.x < xActual + pacmanImgTam && accesoBloque.x + 12 > xActual && accesoBloque.y < yActual + pacmanImgTam && 12 + accesoBloque.y > yActual){
+                if (accesoBloque.x < xActual + pacmanTam && accesoBloque.x + 12 > xActual && accesoBloque.y < yActual + pacmanTam && 12 + accesoBloque.y > yActual){
                     return barreraBool = true;
                 }
                 barreraBool = false;
             }
+            else{
+                if (accesoBloque.tipo === -1){
+                    if (accesoBloque.x < xActual + pacmanTam && accesoBloque.x + 12 > xActual && accesoBloque.y < yActual + pacmanTam && 12 + accesoBloque.y > yActual){
+                        console.log("Eliminando punto")
+                        marcador += 1;
+                        accesoBloque.tipo = -2;
+                    }
+                    barreraBool = false;
+                }
+            }
 
         }
     }
+}
+
+let fuente = new FontFace('press-start-2p-v9-latin-regular.woff', 'press-start-2p-v9-latin-regular.woff');
+
+function dibujarMarcador(){
+    ctx.font = "10px pacman";
+    ctx.fillStyle="white";
+    ctx.fillText("1up",15,15);
+
+    ctx.font = "10px pacman";
+    ctx.fillStyle="white";
+    ctx.fillText(marcador,25,30);
+
+    ctx.font = "12px pacman";
+    ctx.fillStyle="white";
+    ctx.fillText("HIGH SCORE",canvas.width/2 - 53,20);
+
 }
