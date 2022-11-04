@@ -9,7 +9,7 @@ imgTile.src = "newResource.png"
 let x = canvas.width;
 let key = 0;
 let xActual = 110;
-let yActual = 100;
+let yActual = 80;
 
 let movimiento = 1;
 let indice = 0;
@@ -25,6 +25,7 @@ let barreraBool = false;
 let resourceX = 492;
 const resourceY = 60;
 const pacmanTam = 13;
+const pacmanImgTam = 6;
 const pacmanCantiMov = 3.75;
 const barrera = canvas.width;
 let keyBackup = 1;
@@ -62,10 +63,16 @@ function manejarTecladoAbajo(e) {
 //2 arriba, 1 izquierda, 0 abajo, 3 derecha
 
 function dibujar(direccion) {
-
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dibujaBarrera();
     detectarBarrera();
+
+    if(key !== keyBackup){
+        barreraBool = !barreraBool
+    }
+
     if (key === 39) {
-        ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
+        ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, pacmanImgTam, pacmanImgTam);
         if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             xActual += pacmanCantiMov;
             inc += cantInc - 1;
@@ -74,7 +81,7 @@ function dibujar(direccion) {
     }
 
     if (key === 37) {
-        ctx.drawImage(img, resourceX + inc, resourceY + 58, pacmanTam, pacmanTam, xActual, yActual, pacmanTam, pacmanTam);
+        ctx.drawImage(img, resourceX + inc, resourceY + 58, pacmanTam, pacmanTam, xActual, yActual, pacmanImgTam, pacmanImgTam);
         if ((xActual > 0) && !barreraBool) {
             xActual -= pacmanCantiMov;
             inc += cantInc;
@@ -83,7 +90,7 @@ function dibujar(direccion) {
     }
 
     if (key === 40) {
-        ctx.drawImage(img, resourceX + inc, resourceY + 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanTam + 3, pacmanTam + 3);
+        ctx.drawImage(img, resourceX + inc, resourceY + 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanImgTam + 3, pacmanImgTam + 3);
         if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             yActual += pacmanCantiMov;
             inc += cantInc;
@@ -92,7 +99,7 @@ function dibujar(direccion) {
     }
 
     if (key === 38) {
-        ctx.drawImage(img, resourceX + inc, resourceY - 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanTam + 3, pacmanTam + 3);
+        ctx.drawImage(img, resourceX + inc, resourceY - 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, pacmanImgTam + 3, pacmanImgTam + 3);
         if ((yActual > 0 && yActual < barrera) && !barreraBool) {
             yActual -= pacmanCantiMov;
             inc += cantInc;
@@ -100,153 +107,12 @@ function dibujar(direccion) {
         if (inc > 60) inc = 0;
     }
 
-    if (barreraBool && key !== keyBackup) {
-        if (key === 39) {
-            xActual += pacmanCantiMov + 5;
-        }
-        if (key === 37) {
-            xActual -= pacmanCantiMov;
-        }
-        if (key === 40) {
-            yActual += pacmanCantiMov + 5;
-        }
-        if (key === 38) {
-            yActual -= pacmanCantiMov;
-        }
-    }
-    keyBackup = key;
 
-
-
-
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    dibujaBarrera();
-    detectarBarrera();
-/*    if (barreraBool && key !== keyBackup) {
-        console.log(xActual)
-        if (key === 39) {
-            let xtemp = xActual
-            xActual += pacmanCantiMov +5
-            console.log("xactual", xActual)
-            detectarBarrera()
-            if (!barreraBool) {
-                key = keyBackup
-                xActual = xtemp
-                barreraBool = false
-            }
-            else{
-                xActual = xActual -5
-                barreraBool = false
-            }
-        }
-        if (key === 37) {
-            let xtemp = xActual
-            xActual -= pacmanCantiMov - 5
-            console.log("xactual", xActual)
-            detectarBarrera()
-            if (!barreraBool) {
-                key = keyBackup
-                xActual = xtemp
-                barreraBool = true
-            }
-            else{
-                xActual = xActual +5
-                barreraBool = false
-            }
-            xActual -= pacmanCantiMov;
-        }
-        if (key === 40) {
-
-            let ytemp = yActual
-
-            yActual += pacmanCantiMov +5
-            detectarBarrera()
-            console.log("detecta: ", barreraBool)
-            if (!barreraBool) {
-                key = keyBackup
-                yActual = ytemp
-                barreraBool = true
-            }
-            else{
-                yActual = yActual - 5
-                barreraBool = false
-
-            }
-
-            yActual += pacmanCantiMov + 5;
-        }
-        if (key === 38) {
-            let ytemp = yActual
-            yActual -= pacmanCantiMov - 5
-            detectarBarrera()
-            if (!barreraBool) {
-                key = keyBackup
-                yActual = ytemp
-                barreraBool = true
-            }
-            else{
-                yActual = yActual + 5
-                barreraBool = false
-
-            }
-            yActual -= pacmanCantiMov;
-        }
-        console.log(barreraBool)
-    }*/
-    detectarBarrera()
-    if (barreraBool && key !== keyBackup) {
-        if (key === 39) {
-
-            ctx.drawImage(img, resourceX + inc, resourceY, pacmanTam, pacmanTam, xActual, yActual, newTam, newTam);
-            if ((xActual < x - (newTam + pacmanCantiMov)) && !barreraBool) {
-                xActual += pacmanCantiMov;
-                inc += cantInc - 1;
-            } else inc = cantInc;
-            if (inc > 60) inc = 0;
-        }
-
-        if (key === 37) {
-            ctx.drawImage(img, resourceX + inc, resourceY + 58, pacmanTam, pacmanTam, xActual, yActual, newTam, newTam);
-            if ((xActual > 0) && !barreraBool) {
-                xActual -= pacmanCantiMov;
-                inc += cantInc;
-            } else inc = cantInc;
-            if (inc > 60) inc = 0;
-        }
-
-        if (key === 40) {
-            ctx.drawImage(img, resourceX + inc, resourceY + 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, newTam, newTam);
-            if ((yActual < y - (pacmanTam)) && !barreraBool) {
-                yActual += pacmanCantiMov;
-                inc += cantInc;
-            } else inc = cantInc;
-            if (inc > 60) inc = 0;
-        }
-
-        if (key === 38) {
-            ctx.drawImage(img, resourceX + inc, resourceY - 29, pacmanTam + 3, pacmanTam + 3, xActual, yActual, newTam, newTam);
-            if ((yActual > 0) && !barreraBool) {
-                yActual -= pacmanCantiMov;
-                inc += cantInc;
-            } else inc = cantInc;
-            if (inc > 60) inc = 0;
-        }
-    }
-    if (key === 39) {
-        xActual += pacmanCantiMov + 5;
-    }
-    if (key === 37) {
-        xActual -= pacmanCantiMov;
-    }
-    if (key === 40) {
-        yActual += pacmanCantiMov + 5;
-    }
-    if (key === 38) {
-        yActual -= pacmanCantiMov;
-    }
     keyBackup = key;
 }
+
+
+
 
 /*
     Mapeado de los elementos del tile
@@ -294,6 +160,7 @@ function vistazoBarrera(coord, tipo){
     }
 }
 
+
 //En esta seccion del codigo encontraremos los casos para los escenarios segun el nivel, como ahora no existe tal situacion
 //se encontraran datos sobre las pruebas para la deteccion de barreras y otros casos a determinar
 function dibujaEscenario() {
@@ -332,7 +199,7 @@ function detectarBarrera() {
                 rect1.y < rect2.y + rect2.h &&
                 rect1.h + rect1.y > rect2.y*/
                 //if (xActual >= accesoBloque.x-newTam && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
-                if (xActual >= accesoBloque.x-newTam+7 && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
+                if (accesoBloque.x < xActual + pacmanImgTam && accesoBloque.x + 12 > xActual && accesoBloque.y < yActual + pacmanImgTam && 12 + accesoBloque.y > yActual){
                     return barreraBool = true;
                 }
                 barreraBool = false;
