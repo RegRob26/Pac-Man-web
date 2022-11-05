@@ -1,11 +1,6 @@
 let canvas = document.getElementById("pacmanCanvas");
 let ctx = canvas.getContext('2d');
 
-/*
-let canvasInicio = document.getElementById("cargaCanvas");
-let ctxCarga = canvasInicio.getContext('2d');
-*/
-
 let img = new Image();
 img.src = "imagenes/resource.png";
 let imgTile = new Image();
@@ -54,23 +49,17 @@ let indice = 0;
 let inc = 0;
 const cantInc = 20;
 const y = canvas.height;
-let direccion = 0;
-let xBarrera = 600;
-let yBarrera = 400;
-let anchuraBarrera = 30;
-let alturaBarrera = 5;
+
+
 let barreraBool = false;
-let resourceX = 492;
-const resourceY = 60;
+
 const pacmanTam = 20;
-const pacmanImgTam = 16;
+
 const pacmanCantiMov = 3.75;
 const barrera = canvas.width;
 let keyBackup = 1;
-let tolerancia = 15;
 let c, r;
 let nivel = 0;
-let newTam = 13;
 let aumentoTam = 10;
 
 let pacmanTamIrrX = pacmanTam;
@@ -80,7 +69,6 @@ let cargaPantalla = false;
 let vistazo = false;
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
-//document.addEventListener('keyup',manejarTecladoArriba, false);
 
 setInterval(decisionPantallas, 40, key)
 
@@ -103,7 +91,6 @@ function decisionPantallas() {
         dibujar();
     }
 }
-
 
 function manejarTecladoAbajo(e) {
     if (e.keyCode === 39) {
@@ -161,7 +148,7 @@ function abajo() {
 }
 
 
-function dibujar(direccion) {
+function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     pantallaCarga();
     dibujaBarrera();
@@ -333,8 +320,6 @@ function detectarBarrera() {
         }
     }
 }
-
-let fuente = new FontFace('press-start-2p-v9-latin-regular.woff', 'press-start-2p-v9-latin-regular.woff');
 
 function dibujarMarcador() {
     ctx.font = "10px pacman";
