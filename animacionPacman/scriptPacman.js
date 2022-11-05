@@ -37,6 +37,27 @@ let inicioJuego = new Audio("audio/game_start.mp3");
 let waka1 = new Audio("audio/dot_1.mp3")
 let waka2 = new Audio("audio/dot_2.mp3")
 
+//Zona de declaraciones fantasmas
+
+let blinkyArriba = new Image();
+let blinkyAbajo = new Image();
+let blinkyDerecha = new Image();
+let blinkyIzquierda = new Image();
+
+blinkyArriba.src = "imagenes/blinky_up_angry.png";
+blinkyDerecha.src = "imagenes/blinky_right_angry.png";
+blinkyAbajo.src = "imagenes/blinky_down_angry.png";
+blinkyIzquierda.src = "imagenes/blinky_left_angry.png";
+
+let blinkyTam = 20;
+let blinkyMov = 3.25;
+let blinkyInc = 20;
+
+let xActBlinky = 200;
+let yActBlinky = 45;
+
+//Fin de carga fantasmas
+
 let decisionAudio = true;
 let x = canvas.width;
 let key = 0;
@@ -111,49 +132,9 @@ function manejarTecladoAbajo(e) {
 //2 arriba, 1 izquierda, 0 abajo, 3 derecha
 
 
-function izquierda() {
-    ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((xActual > 0) && !barreraBool) {
-        xActual -= pacmanCantiMov;
-        inc += cantInc - 4;
-    } else inc = cantInc - 4;
-    if (inc > 60) inc = 0;
-}
+//! Movimientos de PACMAN
 
-function derecha() {
-    ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
-        xActual += pacmanCantiMov;
-        inc += cantInc - 4;
-    } else inc = 16;
-    if (inc > 60) inc = 0;
-}
-
-function arriba() {
-    ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((yActual > 0 && yActual < barrera) && !barreraBool) {
-        yActual -= pacmanCantiMov;
-        inc += cantInc - 4;
-    } else inc = cantInc - 4;
-    if (inc > 60) inc = 0;
-}
-
-function abajo() {
-    ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
-        yActual += pacmanCantiMov;
-        inc += cantInc - 4;
-    } else inc = cantInc - 4;
-    if (inc > 60) inc = 0;
-}
-
-
-function dibujar() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    pantallaCarga();
-    dibujaBarrera();
-    detectarBarrera();
-    dibujarMarcador();
+function movimientoPacman(){
     let xtemp = xActual;
     let yTemp = yActual;
 
@@ -204,13 +185,105 @@ function dibujar() {
     barreraBool = false;
 }
 
+function izquierda() {
+    ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((xActual > 0) && !barreraBool) {
+        xActual -= pacmanCantiMov;
+        inc += cantInc - 4;
+    } else inc = cantInc - 4;
+    if (inc > 60) inc = 0;
+}
+
+function derecha() {
+    ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+        xActual += pacmanCantiMov;
+        inc += cantInc - 4;
+    } else inc = 16;
+    if (inc > 60) inc = 0;
+}
+
+function arriba() {
+    ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((yActual > 0 && yActual < barrera) && !barreraBool) {
+        yActual -= pacmanCantiMov;
+        inc += cantInc - 4;
+    } else inc = cantInc - 4;
+    if (inc > 60) inc = 0;
+}
+
+function abajo() {
+    ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+        yActual += pacmanCantiMov;
+        inc += cantInc - 4;
+    } else inc = cantInc - 4;
+    if (inc > 60) inc = 0;
+}
+// Fin de movimientos pacman
+
+//Movimientos fantasma blinky
+function movimientoFantasma(){
+    izquierdaFantasma();
+}
+
+function izquierdaFantasma() {
+    ctx.drawImage(blinkyIzquierda,blinkyInc , 0, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((xActBlinky > 0)) {
+        xActBlinky -= blinkyMov;
+        blinkyInc += 16;
+    } else blinkyInc = 0;
+    if (blinkyInc > 16) blinkyInc = 0;
+}
+
+function derechaFantasma() {
+    ctx.drawImage(blinkyDerecha, blinkyInc, derechaY, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((xActBlinky < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+        xActBlinky += pacmanCantiMov;
+        blinkyInc += 16;
+    } else blinkyInc = 16;
+    if (blinkyInc > 16) blinkyInc = 0;
+}
+
+function arribaFantasma() {
+    ctx.drawImage(blinkyArriba, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((yActual > 0 && yActual < barrera) && !barreraBool) {
+        yActual -= pacmanCantiMov;
+        blinkyInc += 16;
+    } else blinkyInc = 16;
+    if (blinkyInc > 16) blinkyInc = 0;
+}
+
+function abajoFantasma() {
+    ctx.drawImage(blinkyAbajo, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+    if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+        yActual += blinkyMov;
+        blinkyInc += 16;
+    } else blinkyInc = 16;
+    if (blinkyInc > 16) blinkyInc = 0;
+}
+
+//Fin de movimientos blinky
+
+
+
+
+function dibujar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pantallaCarga();
+    dibujaBarrera();
+    detectarBarrera();
+    dibujarMarcador();
+    movimientoPacman();
+    movimientoFantasma();
+}
+
 function vistazoBarrera() {
     detectarBarrera();
     if (barreraBool) {
         key = keyBackup;
     } else vistazo = false
 }
-
 
 /*
     Mapeado de los elementos del tile
@@ -320,6 +393,28 @@ function detectarBarrera() {
         }
     }
 }
+
+function detectarBarreraFantasma(){
+    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
+        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
+            let accesoBloque = barrerasMatriz[nivel][c][r];
+            //if ((xActual >= accesoBloque.x - pacmanTam/2 - 3) && yActual <= accesoBloque.y  && (xActual <= accesoBloque.x  && yActual >= accesoBloque.y - pacmanTam/2 - 3) && accesoBloque.tipo >=0 ){
+            if (accesoBloque.tipo >= 0) {
+                /*                rect1.x < rect2.x + rect2.w &&
+                                rect1.x + rect1.w > rect2.x &&
+                                rect1.y < rect2.y + rect2.h &&
+                                rect1.h + rect1.y > rect2.y*/
+                //if (xActual >= accesoBloque.x-newTam && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
+                if (accesoBloque.x < xActBlinky + pacmanTamIrrY && accesoBloque.x + pacmanTamIrrY > xActBlinky && accesoBloque.y < yActBlinky + pacmanTamIrrX && pacmanTamIrrY + accesoBloque.y > yActBlinky) {
+                    return barreraBool = true;
+                }
+                barreraBool = false;
+            }
+
+        }
+    }
+}
+
 
 function dibujarMarcador() {
     ctx.font = "10px pacman";
