@@ -1,36 +1,49 @@
 let canvas = document.getElementById("pacmanCanvas");
 let ctx = canvas.getContext('2d');
+
+/*
+let canvasInicio = document.getElementById("cargaCanvas");
+let ctxCarga = canvasInicio.getContext('2d');
+*/
+
 let img = new Image();
-img.src = "resource.png";
+img.src = "imagenes/resource.png";
 let imgTile = new Image();
-imgTile.src = "newResource.png"
+imgTile.src = "imagenes/newResource2.png"
 
 let derechaPacman = new Image();
-derechaPacman.src = "pacman_right.png"
+derechaPacman.src = "imagenes/pacman_right.png"
 let derechaX = 0
 let derechaY = 0
 
 let izquierdaPacman = new Image();
-izquierdaPacman.src = "pacman_left.png"
+izquierdaPacman.src = "imagenes/pacman_left.png"
 let izquierdaX = 0
 let izquierdaY = 0
 
 let arribaPacman = new Image();
-arribaPacman.src = "pacman_up.png"
+arribaPacman.src = "imagenes/pacman_up.png"
 let arribaX = 0
 let arribaY = 0
 
 let abajoPacman = new Image();
-abajoPacman.src = "pacman_down.png"
+abajoPacman.src = "imagenes/pacman_down.png"
 let abajoX = 0
 let abajoY = 0
 
 let punto = new Image();
-punto.src = "powerPellet.png"
+punto.src = "imagenes/powerPellet.png"
 
 let ready = new Image();
-ready.src = "ready.png"
+ready.src = "imagenes/ready.png"
 
+let inicioJuego = new Audio("audio/game_start.mp3");
+let waka1 = new Audio("audio/dot_1.mp3")
+let waka2 = new Audio("audio/dot_2.mp3")
+
+let waka = new Audio("audio/munch_1.mp3")
+
+let decisionAudio = true;
 let x = canvas.width;
 let key = 0;
 let xActual = 100;
@@ -59,27 +72,37 @@ let tolerancia = 0;
 let c, r;
 let nivel = 0;
 let newTam = 13;
-//let tipo = [21, 16, 102, 4, 36, 36, 24, 16, 76, 68, 8, 56, 16, 20, 4, 71, 21, 16, 51, 4,];
+let aumentoTam = 10;
 
-            //Barra horizontal, barra vertical, barra HyV curva, invertida de anterior
-
-
-//let coord = [[315, 0], [243,0], [252,0], [297,0],[306,0]]
+let cargaPantalla = false;
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 //document.addEventListener('keyup',manejarTecladoArriba, false);
 
-setInterval(dibujar, 60, key)
+setInterval(decisionPantallas, 60, key)
 
 function pantallaCarga(){
-    if (indice < 25){
-        ctx.globalAlpha = 1-indice/25;
-        ctx.drawImage(ready,0, 0, 48, 16, canvas.width/2 - 100, canvas.height/2 - 30, 196, 32);
+    if (indice < 50){
+        ctx.globalAlpha = 1-indice/50;
+        ctx.drawImage(ready,0, 0, 48, 16, canvas.width/2 - 100, canvas.height/2 - 30, 216, 52);
         ctx.globalAlpha = 1;
         indice += 2;
+        inicioJuego.play()
     }
-
 }
+
+
+function decisionPantallas(){
+    if (cargaPantalla){
+        document.body.style.backgroundColor = "yellow";
+        document.location.href = "logo.html"
+        //document.location.href = "pacman.html"
+    }
+    else{
+        dibujar();
+    }
+}
+
 
 
 function manejarTecladoAbajo(e) {
@@ -113,7 +136,7 @@ function dibujar(direccion) {
     let yTemp = yActual
 
     if (key === 39) {
-        ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
+        ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
         if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             xActual += pacmanCantiMov;
             inc += cantInc - 4;
@@ -122,7 +145,7 @@ function dibujar(direccion) {
     }
 
     if (key === 37) {
-        ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
+        ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
         if ((xActual > 0) && !barreraBool) {
             xActual -= pacmanCantiMov;
             inc += cantInc - 4;
@@ -131,7 +154,7 @@ function dibujar(direccion) {
     }
 
     if (key === 40) {
-        ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
+        ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
         if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
             yActual += pacmanCantiMov;
             inc += cantInc - 4;
@@ -140,15 +163,13 @@ function dibujar(direccion) {
     }
 
     if (key === 38) {
-        ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam, pacmanTam);
+        ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
         if ((yActual > 0 && yActual < barrera) && !barreraBool) {
             yActual -= pacmanCantiMov;
             inc += cantInc - 4;
         } else inc = cantInc - 4;
         if (inc > 60) inc = 0;
     }
-
-
     keyBackup = key;
 }
 
@@ -184,7 +205,8 @@ let barrerasMatriz =
             [{tipo: 3},    {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14,}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
             [{tipo: 3},    {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 20,},  {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
             [{tipo: 3},    {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo:2,},],
-            [{tipo: 5},     {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 4,},]
+            [{tipo: 5},     {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 4,},],
+                [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}]
         ]
     ]
 
@@ -215,12 +237,12 @@ function dibujaBarrera() {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
             if (barrerasMatriz[nivel][c][r].tipo >= 0 && barrerasMatriz[nivel][c][r].tipo <= 99) {
                 let accesoBloque = barrerasMatriz[nivel][c][r];
-                let xBarrera = (r*16);
-                let yBarrera = (c*16);
+                let xBarrera = (r*18);
+                let yBarrera = (c*18);
                 accesoBloque.x = xBarrera;
                 accesoBloque.y = yBarrera;
                 ctx.beginPath();
-                ctx.drawImage(imgTile, coord[accesoBloque.tipo][0], coord[accesoBloque.tipo][1], 7, 7, xBarrera, yBarrera, 16,16)
+                ctx.drawImage(imgTile, coord[accesoBloque.tipo][0], coord[accesoBloque.tipo][1], 7, 7, xBarrera, yBarrera, 18,18)
                 //ctx.drawImage(imgTile, tipo[accesoBloque.tileF][accesoBloque.tileC][0], tipo[accesoBloque.tipo + 1], tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3], xBarrera, yBarrera + accesoBloque.separacion, tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3]);
                 ctx.fillStyle = "blue";
                 ctx.fill();
@@ -229,13 +251,13 @@ function dibujaBarrera() {
             else{
                 if (barrerasMatriz[nivel][c][r].tipo === -1){
                     let accesoBloque = barrerasMatriz[nivel][c][r];
-                    let xBarrera = (r*16) + 4;
-                    let yBarrera = (c*16) + 4;
+                    let xBarrera = (r*18) + 4;
+                    let yBarrera = (c*18) + 4;
                     accesoBloque.x = xBarrera;
                     accesoBloque.y = yBarrera;
                     console.log("Dibujando punto")
                     ctx.beginPath();
-                    ctx.drawImage(punto,0, 0, 8, 8, xBarrera, yBarrera, 4,4)
+                    ctx.drawImage(punto,0, 0, 8, 8, xBarrera, yBarrera, 6,6)
                     ctx.closePath();
                 }
 
@@ -267,6 +289,14 @@ function detectarBarrera() {
                         console.log("Eliminando punto")
                         marcador += 1;
                         accesoBloque.tipo = -2;
+                        if (decisionAudio){
+                            waka1.play();
+                            decisionAudio = false;
+                        }
+                        else {
+                            waka2.play()
+                            decisionAudio = true;
+                        }
                     }
                     barreraBool = false;
                 }
@@ -290,5 +320,9 @@ function dibujarMarcador(){
     ctx.font = "12px pacman";
     ctx.fillStyle="white";
     ctx.fillText("HIGH SCORE",canvas.width/2 - 53,20);
+
+    ctx.font = "12px pacman";
+    ctx.fillStyle="white";
+    ctx.fillText(marcador, canvas.width/2-5,30);
 
 }
