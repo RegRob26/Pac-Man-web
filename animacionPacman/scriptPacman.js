@@ -38,10 +38,9 @@ let ready = new Image();
 ready.src = "imagenes/ready.png"
 
 let inicioJuego = new Audio("audio/game_start.mp3");
+
 let waka1 = new Audio("audio/dot_1.mp3")
 let waka2 = new Audio("audio/dot_2.mp3")
-
-let waka = new Audio("audio/munch_1.mp3")
 
 let decisionAudio = true;
 let x = canvas.width;
@@ -63,18 +62,22 @@ let alturaBarrera = 5;
 let barreraBool = false;
 let resourceX = 492;
 const resourceY = 60;
-const pacmanTam = 12;
+const pacmanTam = 20;
 const pacmanImgTam = 16;
 const pacmanCantiMov = 3.75;
 const barrera = canvas.width;
 let keyBackup = 1;
-let tolerancia = 0;
+let tolerancia = 15;
 let c, r;
 let nivel = 0;
 let newTam = 13;
 let aumentoTam = 10;
 
+let pacmanTamIrrX = pacmanTam;
+let pacmanTamIrrY = 12;
+
 let cargaPantalla = false;
+let vistazo = false;
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 //document.addEventListener('keyup',manejarTecladoArriba, false);
@@ -96,7 +99,6 @@ function decisionPantallas(){
     if (cargaPantalla){
         document.body.style.backgroundColor = "yellow";
         document.location.href = "logo.html"
-        //document.location.href = "pacman.html"
     }
     else{
         dibujar();
@@ -129,60 +131,104 @@ function dibujar(direccion) {
     dibujaBarrera();
     detectarBarrera();
     dibujarMarcador();
-    if(key !== keyBackup){
-        barreraBool = !barreraBool
-    }
+
+
+
     let xtemp = xActual
     let yTemp = yActual
+    let barreraTemp = barreraBool;
+
+
+    //37 izquierda, 39 derecha, 38 arriba, 40 abajo
+    let tempKey = key;
 
     if (key === 39) {
-        ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-        if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
-            xActual += pacmanCantiMov;
-            inc += cantInc - 4;
-        } else inc = 16;
-        if (inc > 60) inc = 0;
+        xActual += pacmanCantiMov;
+        detectarBarrera();
+        if (barreraBool){
+            key = keyBackup;
+        }else vistazo = false;
+        xActual = xtemp;
     }
-
     if (key === 37) {
-        ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-        if ((xActual > 0) && !barreraBool) {
-            xActual -= pacmanCantiMov;
-            inc += cantInc - 4;
-        } else inc = cantInc - 4;
-        if (inc > 60) inc = 0;
-    }
+        xActual -= pacmanCantiMov;
+        detectarBarrera();
 
+        if (barreraBool){
+            key = keyBackup;
+        }
+        else vistazo = false
+        xActual = xtemp;
+    }
     if (key === 40) {
-        ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-        if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
-            yActual += pacmanCantiMov;
-            inc += cantInc - 4;
-        } else inc = cantInc - 4;
-        if (inc > 60) inc = 0;
+        yActual += pacmanCantiMov;
+        detectarBarrera();
+
+        if (barreraBool){
+            key = keyBackup;
+        }else vistazo = false
+
+        yActual = yTemp;
+    }
+    if (key === 38) {
+        yActual -= pacmanCantiMov;
+        detectarBarrera();
+        if (barreraBool) {
+            key = keyBackup;
+        }else vistazo = false
+        yActual =yTemp;
+    }
+    if(key !== keyBackup && barreraBool){
+        barreraBool = !barreraBool
     }
 
-    if (key === 38) {
-        ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-        if ((yActual > 0 && yActual < barrera) && !barreraBool) {
-            yActual -= pacmanCantiMov;
-            inc += cantInc - 4;
-        } else inc = cantInc - 4;
-        if (inc > 60) inc = 0;
+    if (!vistazo) {
+
+        if (key === 39) {
+            ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+            if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+                xActual += pacmanCantiMov;
+                inc += cantInc - 4;
+            } else inc = 16;
+            if (inc > 60) inc = 0;
+        }
+
+        if (key === 37) {
+            ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+            if ((xActual > 0) && !barreraBool) {
+                xActual -= pacmanCantiMov;
+                inc += cantInc - 4;
+            } else inc = cantInc - 4;
+            if (inc > 60) inc = 0;
+        }
+
+        if (key === 40) {
+            ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+            if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+                yActual += pacmanCantiMov;
+                inc += cantInc - 4;
+            } else inc = cantInc - 4;
+            if (inc > 60) inc = 0;
+        }
+
+        if (key === 38) {
+            ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+            if ((yActual > 0 && yActual < barrera) && !barreraBool) {
+                yActual -= pacmanCantiMov;
+                inc += cantInc - 4;
+            } else inc = cantInc - 4;
+            if (inc > 60) inc = 0;
+        }
     }
     keyBackup = key;
+    barreraBool = false;
 }
-
-
-
 
 /*
     Mapeado de los elementos del tile
 
 
  */
-
-
 
 let coord = [
                 [225,0], [234,0], [243,0], [252,0], [261,0], [270,0], [279,0], [288,0], [297,0], [306, 0], [315, 0], [324, 0], [333,0], [342, 0], [351, 0], [360, 0],
@@ -206,7 +252,7 @@ let barrerasMatriz =
             [{tipo: 3},    {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 20,},  {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
             [{tipo: 3},    {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo:2,},],
             [{tipo: 5},     {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 4,},],
-                [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}]
+            [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}]
         ]
     ]
 
@@ -255,7 +301,6 @@ function dibujaBarrera() {
                     let yBarrera = (c*18) + 4;
                     accesoBloque.x = xBarrera;
                     accesoBloque.y = yBarrera;
-                    console.log("Dibujando punto")
                     ctx.beginPath();
                     ctx.drawImage(punto,0, 0, 8, 8, xBarrera, yBarrera, 6,6)
                     ctx.closePath();
@@ -278,15 +323,14 @@ function detectarBarrera() {
                 rect1.y < rect2.y + rect2.h &&
                 rect1.h + rect1.y > rect2.y*/
                 //if (xActual >= accesoBloque.x-newTam && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
-                if (accesoBloque.x < xActual + pacmanTam && accesoBloque.x + 12 > xActual && accesoBloque.y < yActual + pacmanTam && 12 + accesoBloque.y > yActual){
+                if (accesoBloque.x < xActual + pacmanTamIrrY && accesoBloque.x + pacmanTamIrrY > xActual && accesoBloque.y < yActual + pacmanTamIrrX && pacmanTamIrrY + accesoBloque.y > yActual){
                     return barreraBool = true;
                 }
                 barreraBool = false;
             }
             else{
                 if (accesoBloque.tipo === -1){
-                    if (accesoBloque.x < xActual + pacmanTam && accesoBloque.x + 12 > xActual && accesoBloque.y < yActual + pacmanTam && 12 + accesoBloque.y > yActual){
-                        console.log("Eliminando punto")
+                    if (accesoBloque.x < xActual + pacmanTam && accesoBloque.x + pacmanTam > xActual && accesoBloque.y < yActual + pacmanTam && pacmanTam + accesoBloque.y > yActual){
                         marcador += 1;
                         accesoBloque.tipo = -2;
                         if (decisionAudio){
