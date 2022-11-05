@@ -1,3 +1,22 @@
-canvas{
+#pacmanCanvas{
     background-color: black;
+    padding: 10px 30px 30px;
+    border: 5px solid rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    background-clip: padding-box;
+}
+
+#canvasDiv{
+    align-content: center;
+    width: 520px;
+    margin: auto;
+}
+
+@font-face {
+    font-family: 'pacman';
+    src: url('press-start-2p-v9-latin-regular.woff') format('truetype');
+}
+
+html{
+    background-color: rgba(0, 0, 0, 1);
 }
