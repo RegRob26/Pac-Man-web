@@ -34,8 +34,12 @@ ready.src = "imagenes/ready.png"
 
 let muertePacman = new Image();
 muertePacman.src = "imagenes/pacman_death.png"
+
 let vidaExtra = new Image();
 vidaExtra.src = "imagenes/extra_life.png";
+
+let gameOverImg = new Image();
+gameOverImg.src = "imagenes/game_over.png";
 
 
 let inicioJuego = new Audio("audio/game_start.mp3");
@@ -105,6 +109,8 @@ let pacmanTamIrrY = 12;
 let cargaPantalla = false;
 let vistazo = false;
 let cambio = 0;
+let finJuego = false;
+
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 
@@ -275,6 +281,14 @@ function dibujaVidas(){
             contador++;
         }
     }
+    else{
+        gameOver();
+    }
+}
+
+function gameOver(){
+    ctx.drawImage(gameOverImg, 0, 0, 80, 16, (canvas.width/2)-75, 120, 160, 32);
+    finJuego = true;
 }
 
 function reinicio(){
@@ -420,7 +434,7 @@ function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     console.log(xActual, yActual);
 
-
+    if (!finJuego) {
         pantallaCarga();
         dibujaBarrera();
         detectarBarrera();
@@ -429,7 +443,11 @@ function dibujar() {
         colisionConFantasma();
         movimientoPacman();
         dibujaVidas();
-
+    }
+    else{
+        dibujaBarrera();
+        gameOver();
+    }
 }
 
 
