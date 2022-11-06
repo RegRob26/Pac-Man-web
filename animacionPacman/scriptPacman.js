@@ -78,7 +78,6 @@ let choqueFantasma = false;
 let vidas = 2;
 
 
-
 let decisionAudio = true;
 let x = canvas.width;
 let key = 0;
@@ -257,13 +256,12 @@ function colisionConFantasma() {
 }
 
 function dibujarMuertePacman() {
-    if (cambio<= 12) {
+    if (cambio <= 12) {
         muerteSonido.play();
         ctx.drawImage(muertePacman, cambio * 16, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-        cambio +=1;
-    }
-    else {
-        if (cambio === 13){
+        cambio += 1;
+    } else {
+        if (cambio === 13) {
             cambio = 0;
             choqueFantasma = false;
             vidas--;
@@ -273,56 +271,45 @@ function dibujarMuertePacman() {
     console.log("Muerte de pacman: ", cambio);
 }
 
-function dibujaVidas(){
-    if (vidas >= 0){
+function dibujaVidas() {
+    if (vidas >= 0) {
         let contador = 0;
-        while (contador <= vidas){
-            ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador*16, 250, 16, 16);
+        while (contador <= vidas) {
+            ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador * 16, 250, 16, 16);
             contador++;
         }
-    }
-    else{
+    } else {
         gameOver();
     }
 }
 
-function gameOver(){
-    ctx.drawImage(gameOverImg, 0, 0, 80, 16, (canvas.width/2)-75, 120, 160, 32);
+function gameOver() {
+    ctx.drawImage(gameOverImg, 0, 0, 80, 16, (canvas.width / 2) - 75, 120, 160, 32);
     finJuego = true;
 }
 
-function reinicio(){
-
+function reinicio() {
     xActBlinky = 150;
     yActBlinky = 125;
-
     barreraFantasma = false;
     prediccion = 1;
     prediccionBackup = 2;
-
     choqueFantasma = false;
-
     decisionAudio = true;
     x = canvas.width;
     key = 0;
     xActual = 245;
     yActual = 120;
-
     indice = 0;
     inc = 0;
-
-
     barreraBool = false;
-
-
     keyBackup = 1;
     nivel = 0;
-
-
     cargaPantalla = false;
     vistazo = false;
     cambio = 0;
 }
+
 // Fin de movimientos pacman
 
 //Movimientos fantasma blinky
@@ -443,8 +430,7 @@ function dibujar() {
         colisionConFantasma();
         movimientoPacman();
         dibujaVidas();
-    }
-    else{
+    } else {
         dibujaBarrera();
         gameOver();
     }
@@ -479,7 +465,6 @@ let barrerasMatriz =
 
 //En esta seccion del codigo encontraremos los casos para los escenarios segun el nivel, como ahora no existe tal situacion
 //se encontraran datos sobre las pruebas para la deteccion de barreras y otros casos a determinar
-
 
 
 function dibujaBarrera() {
