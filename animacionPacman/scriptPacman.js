@@ -34,6 +34,8 @@ ready.src = "imagenes/ready.png"
 
 let muertePacman = new Image();
 muertePacman.src = "imagenes/pacman_death.png"
+let vidaExtra = new Image();
+vidaExtra.src = "imagenes/extra_life.png";
 
 
 let inicioJuego = new Audio("audio/game_start.mp3");
@@ -69,6 +71,8 @@ let prediccionBackup = 2;
 
 //Zona variables pacman
 let choqueFantasma = false;
+let vidas = 2;
+
 
 
 let decisionAudio = true;
@@ -78,7 +82,6 @@ let xActual = 245;
 let yActual = 120;
 
 let marcador = 0;
-let movimiento = 1;
 let indice = 0;
 let inc = 0;
 const cantInc = 20;
@@ -241,15 +244,7 @@ function abajo() {
 }
 
 function colisionConFantasma() {
-    /*                rect1.x < rect2.x + rect2.w &&
-                               rect1.x + rect1.w > rect2.x &&
-                               rect1.y < rect2.y + rect2.h &&
-                               rect1.h + rect1.y > rect2.y*/
-    console.log("Detectando fantasma");
-    //if (accesoBloque.x < xActBlinky + 12 && accesoBloque.x + 12 > xActBlinky && accesoBloque.y < yActBlinky + 12 && 12 + accesoBloque.y > yActBlinky) {
-    //                if (accesoBloque.x < xActual + pacmanTamIrrY && accesoBloque.x + pacmanTamIrrY > xActual && accesoBloque.y < yActual + pacmanTamIrrX && pacmanTamIrrY + accesoBloque.y > yActual) {
     if (xActBlinky < xActual + 12 && xActBlinky + 12 > xActual && yActBlinky < yActual + blinkyTam && blinkyTam + yActBlinky > yActual) {
-        console.log("Fantasma detectado")
         choqueFantasma = true;
         dibujarMuertePacman();
     }
@@ -257,14 +252,63 @@ function colisionConFantasma() {
 
 function dibujarMuertePacman() {
     if (cambio<= 12) {
-        console.log("Reproduciendo muerte")
         muerteSonido.play();
         ctx.drawImage(muertePacman, cambio * 16, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
         cambio +=1;
     }
+    else {
+        if (cambio === 13){
+            cambio = 0;
+            choqueFantasma = false;
+            vidas--;
+            reinicio();
+        }
+    }
+    console.log("Muerte de pacman: ", cambio);
 }
 
+function dibujaVidas(){
+    if (vidas >= 0){
+        let contador = 0;
+        while (contador <= vidas){
+            ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador*16, 250, 16, 16);
+            contador++;
+        }
+    }
+}
 
+function reinicio(){
+
+    xActBlinky = 150;
+    yActBlinky = 125;
+
+    barreraFantasma = false;
+    prediccion = 1;
+    prediccionBackup = 2;
+
+    choqueFantasma = false;
+
+    decisionAudio = true;
+    x = canvas.width;
+    key = 0;
+    xActual = 245;
+    yActual = 120;
+
+    indice = 0;
+    inc = 0;
+
+
+    barreraBool = false;
+
+
+    keyBackup = 1;
+    nivel = 0;
+
+
+    cargaPantalla = false;
+    vistazo = false;
+    cambio = 0;
+}
 // Fin de movimientos pacman
 
 //Movimientos fantasma blinky
@@ -375,13 +419,16 @@ function abajoFantasma() {
 function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     console.log(xActual, yActual);
-    pantallaCarga();
-    dibujaBarrera();
-    detectarBarrera();
-    dibujarMarcador();
-    movimientoFantasma();
-    colisionConFantasma();
-    movimientoPacman();
+
+
+        pantallaCarga();
+        dibujaBarrera();
+        detectarBarrera();
+        dibujarMarcador();
+        movimientoFantasma();
+        colisionConFantasma();
+        movimientoPacman();
+        dibujaVidas();
 
 }
 
@@ -412,9 +459,10 @@ let barrerasMatriz =
         ]
     ]
 
-
 //En esta seccion del codigo encontraremos los casos para los escenarios segun el nivel, como ahora no existe tal situacion
 //se encontraran datos sobre las pruebas para la deteccion de barreras y otros casos a determinar
+
+
 
 function dibujaBarrera() {
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
