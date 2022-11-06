@@ -32,10 +32,16 @@ punto.src = "imagenes/powerPellet.png"
 let ready = new Image();
 ready.src = "imagenes/ready.png"
 
+let muertePacman = new Image();
+muertePacman.src = "imagenes/pacman_death.png"
+
+
 let inicioJuego = new Audio("audio/game_start.mp3");
+let muerteSonido = new Audio("audio/death.mp3")
 
 let waka1 = new Audio("audio/dot_1.mp3")
 let waka2 = new Audio("audio/dot_2.mp3")
+
 
 //Zona de declaraciones fantasmas
 
@@ -53,13 +59,17 @@ let blinkyTam = 20;
 let blinkyMov = 3.25;
 let blinkyInc = 20;
 
-let xActBlinky = 245;
+let xActBlinky = 150;
 let yActBlinky = 125;
 
 let barreraFantasma = false;
 let prediccion = 1;
 let prediccionBackup = 2;
 //Fin de carga fantasmas
+
+//Zona variables pacman
+let choqueFantasma = false;
+
 
 let decisionAudio = true;
 let x = canvas.width;
@@ -91,6 +101,7 @@ let pacmanTamIrrY = 12;
 
 let cargaPantalla = false;
 let vistazo = false;
+let cambio = 0;
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 
@@ -137,34 +148,34 @@ function manejarTecladoAbajo(e) {
 
 //! Movimientos de PACMAN
 
-function movimientoPacman(){
+function movimientoPacman() {
     let xTempPacman = xActual;
     let yTempPacman = yActual;
 
-
-    if (key === 39) {
-        xActual += pacmanCantiMov;
-        vistazoBarrera();
-        xActual = xTempPacman;
-    }
-    if (key === 37) {
-        xActual -= pacmanCantiMov;
-        vistazoBarrera();
-        xActual = xTempPacman;
-    }
-    if (key === 40) {
-        yActual += pacmanCantiMov;
-        vistazoBarrera();
-        yActual = yTempPacman;
-    }
-    if (key === 38) {
-        yActual -= pacmanCantiMov;
-        vistazoBarrera();
-        yActual = yTempPacman;
-    }
-    if (key !== keyBackup && barreraBool) {
-        barreraBool = !barreraBool
-    }
+    if (!choqueFantasma) {
+        if (key === 39) {
+            xActual += pacmanCantiMov;
+            vistazoBarrera();
+            xActual = xTempPacman;
+        }
+        if (key === 37) {
+            xActual -= pacmanCantiMov;
+            vistazoBarrera();
+            xActual = xTempPacman;
+        }
+        if (key === 40) {
+            yActual += pacmanCantiMov;
+            vistazoBarrera();
+            yActual = yTempPacman;
+        }
+        if (key === 38) {
+            yActual -= pacmanCantiMov;
+            vistazoBarrera();
+            yActual = yTempPacman;
+        }
+        if (key !== keyBackup && barreraBool) {
+            barreraBool = !barreraBool
+        }
         //37 izquierda, 39 derecha, 38 arriba, 40 abajo
         if (key === 39) {
             derecha();
@@ -181,9 +192,11 @@ function movimientoPacman(){
         if (key === 38) {
             arriba();
         }
-    keyBackup = key;
-    barreraBool = false;
+        keyBackup = key;
+        barreraBool = false;
+    }
 }
+
 function vistazoBarrera() {
     detectarBarrera();
     if (barreraBool) {
@@ -226,76 +239,102 @@ function abajo() {
     } else inc = cantInc - 4;
     if (inc > 60) inc = 0;
 }
+
+function colisionConFantasma() {
+    /*                rect1.x < rect2.x + rect2.w &&
+                               rect1.x + rect1.w > rect2.x &&
+                               rect1.y < rect2.y + rect2.h &&
+                               rect1.h + rect1.y > rect2.y*/
+    console.log("Detectando fantasma");
+    //if (accesoBloque.x < xActBlinky + 12 && accesoBloque.x + 12 > xActBlinky && accesoBloque.y < yActBlinky + 12 && 12 + accesoBloque.y > yActBlinky) {
+    //                if (accesoBloque.x < xActual + pacmanTamIrrY && accesoBloque.x + pacmanTamIrrY > xActual && accesoBloque.y < yActual + pacmanTamIrrX && pacmanTamIrrY + accesoBloque.y > yActual) {
+    if (xActBlinky < xActual + 12 && xActBlinky + 12 > xActual && yActBlinky < yActual + blinkyTam && blinkyTam + yActBlinky > yActual) {
+        console.log("Fantasma detectado")
+        choqueFantasma = true;
+        dibujarMuertePacman();
+    }
+}
+
+function dibujarMuertePacman() {
+    if (cambio<= 12) {
+        console.log("Reproduciendo muerte")
+        muerteSonido.play();
+        ctx.drawImage(muertePacman, cambio * 16, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
+        cambio +=1;
+    }
+}
+
+
 // Fin de movimientos pacman
 
 //Movimientos fantasma blinky
-function movimientoFantasma(){
+function movimientoFantasma() {
     let xTempFantasma = xActBlinky;
     let yTempFantasma = yActBlinky;
 
     //detectarBarreraFantasma();
     console.log(barreraFantasma, prediccion, prediccionBackup);
-
-    if (barreraFantasma && prediccionBackup === prediccion){
-        while (prediccionBackup === prediccion){
-            prediccion = Math.floor(Math.random()*4)+1
+    if (!choqueFantasma) {
+        if (barreraFantasma && prediccionBackup === prediccion) {
+            while (prediccionBackup === prediccion) {
+                prediccion = Math.floor(Math.random() * 4) + 1
+            }
         }
-    }
 
-    if (prediccion===1){
-        xActBlinky +=blinkyMov;
-        vistazoBarreraFantasma();
-        xActBlinky = xTempFantasma;
-    }
+        if (prediccion === 1) {
+            xActBlinky += blinkyMov;
+            vistazoBarreraFantasma();
+            xActBlinky = xTempFantasma;
+        }
 
-    if (prediccion===2){
-        xActBlinky -=blinkyMov;
-        vistazoBarreraFantasma();
-        xActBlinky = xTempFantasma;
-    }
+        if (prediccion === 2) {
+            xActBlinky -= blinkyMov;
+            vistazoBarreraFantasma();
+            xActBlinky = xTempFantasma;
+        }
 
-    if (prediccion===3){
-        yActBlinky +=blinkyMov;
-        vistazoBarreraFantasma();
-        yActBlinky = yTempFantasma;
-    }
+        if (prediccion === 3) {
+            yActBlinky += blinkyMov;
+            vistazoBarreraFantasma();
+            yActBlinky = yTempFantasma;
+        }
 
-    if (prediccion===4){
-        yActBlinky -=blinkyMov;
-        vistazoBarreraFantasma();
-        yActBlinky = yTempFantasma;
-    }
+        if (prediccion === 4) {
+            yActBlinky -= blinkyMov;
+            vistazoBarreraFantasma();
+            yActBlinky = yTempFantasma;
+        }
 
-    if (prediccion !== prediccionBackup && barreraFantasma){
-        barreraFantasma = !barreraFantasma;
-    }
+        if (prediccion !== prediccionBackup && barreraFantasma) {
+            barreraFantasma = !barreraFantasma;
+        }
 
-    if (prediccion===1){
-        derechaFantasma();
+        if (prediccion === 1) {
+            derechaFantasma();
+        }
+        if (prediccion === 2) {
+            izquierdaFantasma();
+        }
+        if (prediccion === 3) {
+            abajoFantasma();
+        }
+        if (prediccion === 4) {
+            arribaFantasma();
+        }
+        prediccionBackup = prediccion;
+        barreraBool = false;
     }
-    if (prediccion ===2){
-        izquierdaFantasma();
-    }
-    if (prediccion ===3){
-        abajoFantasma();
-    }
-    if (prediccion ===4){
-        arribaFantasma();
-    }
-    prediccionBackup = prediccion;
-    barreraBool = false;
-
 }
 
-function vistazoBarreraFantasma(){
+function vistazoBarreraFantasma() {
     detectarBarreraFantasma();
-    if (barreraFantasma){
+    if (barreraFantasma) {
         prediccion = prediccionBackup;
     }
 }
 
 function izquierdaFantasma() {
-    ctx.drawImage(blinkyIzquierda,blinkyInc , 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
+    ctx.drawImage(blinkyIzquierda, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
     if ((xActBlinky > 0) && !barreraFantasma) {
         xActBlinky -= blinkyMov;
         blinkyInc += 16;
@@ -304,7 +343,7 @@ function izquierdaFantasma() {
 }
 
 function derechaFantasma() {
-    ctx.drawImage(blinkyDerecha, blinkyInc, derechaY, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam) ;
+    ctx.drawImage(blinkyDerecha, blinkyInc, derechaY, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
     if ((xActBlinky < x - (blinkyTam + blinkyMov)) && !barreraFantasma) {
         xActBlinky += blinkyMov;
         blinkyInc += 16;
@@ -313,7 +352,7 @@ function derechaFantasma() {
 }
 
 function arribaFantasma() {
-    ctx.drawImage(blinkyArriba, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam) ;
+    ctx.drawImage(blinkyArriba, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
     if ((yActBlinky > 0 && yActBlinky < barrera) && !barreraFantasma) {
         yActBlinky -= blinkyMov;
         blinkyInc += 16;
@@ -323,7 +362,7 @@ function arribaFantasma() {
 
 function abajoFantasma() {
     ctx.drawImage(blinkyAbajo, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((yActBlinky < y - (blinkyTam+ blinkyMov)) && !barreraFantasma) {
+    if ((yActBlinky < y - (blinkyTam + blinkyMov)) && !barreraFantasma) {
         yActBlinky += blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 16;
@@ -331,8 +370,6 @@ function abajoFantasma() {
 }
 
 //Fin de movimientos blinky
-
-
 
 
 function dibujar() {
@@ -343,17 +380,10 @@ function dibujar() {
     detectarBarrera();
     dibujarMarcador();
     movimientoFantasma();
+    colisionConFantasma();
     movimientoPacman();
 
 }
-
-
-
-/*
-    Mapeado de los elementos del tile
-
-
- */
 
 
 let coord = [
@@ -454,12 +484,12 @@ function detectarBarrera() {
     }
 }
 
-function detectarBarreraFantasma(){
+function detectarBarreraFantasma() {
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
             let accesoBloque = barrerasMatriz[nivel][c][r];
             if (accesoBloque.tipo >= 0) {
-                if (accesoBloque.x < xActBlinky +12   && accesoBloque.x + 12  > xActBlinky && accesoBloque.y < yActBlinky + 12 &&  12+accesoBloque.y > yActBlinky) {
+                if (accesoBloque.x < xActBlinky + 12 && accesoBloque.x + 12 > xActBlinky && accesoBloque.y < yActBlinky + 12 && 12 + accesoBloque.y > yActBlinky) {
                     return barreraFantasma = true;
                 }
                 barreraFantasma = false;
