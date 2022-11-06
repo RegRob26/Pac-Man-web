@@ -109,7 +109,9 @@ let cargaPantalla = false;
 let vistazo = false;
 let cambio = 0;
 let finJuego = false;
+let subirNivelBool = false;
 
+let totalPuntos = 0;
 
 document.addEventListener('keydown', manejarTecladoAbajo, false);
 
@@ -310,6 +312,18 @@ function reinicio() {
     cambio = 0;
 }
 
+function subirNivel() {
+    console.log("total puntos", totalPuntos);
+    if (totalPuntos === 0){
+        ctx.font = "30px pacman";
+        ctx.fillStyle = "white";
+        ctx.fillText("LEVEL UP", 200, 100);
+        subirNivelBool = true;
+        reinicio();
+    }
+}
+
+
 // Fin de movimientos pacman
 
 //Movimientos fantasma blinky
@@ -430,6 +444,8 @@ function dibujar() {
         colisionConFantasma();
         movimientoPacman();
         dibujaVidas();
+        subirNivel();
+
     } else {
         dibujaBarrera();
         gameOver();
@@ -466,8 +482,8 @@ let barrerasMatriz =
 //En esta seccion del codigo encontraremos los casos para los escenarios segun el nivel, como ahora no existe tal situacion
 //se encontraran datos sobre las pruebas para la deteccion de barreras y otros casos a determinar
 
-
 function dibujaBarrera() {
+    let recuentoPuntos = 0;
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
             if (barrerasMatriz[nivel][c][r].tipo >= 0 && barrerasMatriz[nivel][c][r].tipo <= 99) {
@@ -488,15 +504,17 @@ function dibujaBarrera() {
                     let yBarrera = (c * 18) + 2;
                     accesoBloque.x = xBarrera;
                     accesoBloque.y = yBarrera;
+                    recuentoPuntos++;
                     ctx.beginPath();
                     ctx.drawImage(punto, 0, 0, 8, 8, xBarrera, yBarrera, 6, 6)
                     ctx.closePath();
+
                 }
 
             }
         }
     }
-
+    totalPuntos = recuentoPuntos;
 }
 
 function detectarBarrera() {
