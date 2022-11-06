@@ -53,9 +53,12 @@ let blinkyTam = 20;
 let blinkyMov = 3.25;
 let blinkyInc = 20;
 
-let xActBlinky = 200;
-let yActBlinky = 45;
+let xActBlinky = 245;
+let yActBlinky = 125;
 
+let barreraFantasma = false;
+let prediccion = 1;
+let prediccionBackup = 2;
 //Fin de carga fantasmas
 
 let decisionAudio = true;
@@ -135,35 +138,33 @@ function manejarTecladoAbajo(e) {
 //! Movimientos de PACMAN
 
 function movimientoPacman(){
-    let xtemp = xActual;
-    let yTemp = yActual;
+    let xTempPacman = xActual;
+    let yTempPacman = yActual;
 
 
     if (key === 39) {
         xActual += pacmanCantiMov;
         vistazoBarrera();
-        xActual = xtemp;
+        xActual = xTempPacman;
     }
     if (key === 37) {
         xActual -= pacmanCantiMov;
         vistazoBarrera();
-        xActual = xtemp;
+        xActual = xTempPacman;
     }
     if (key === 40) {
         yActual += pacmanCantiMov;
         vistazoBarrera();
-        yActual = yTemp;
+        yActual = yTempPacman;
     }
     if (key === 38) {
         yActual -= pacmanCantiMov;
         vistazoBarrera();
-        yActual = yTemp;
+        yActual = yTempPacman;
     }
     if (key !== keyBackup && barreraBool) {
         barreraBool = !barreraBool
     }
-
-    if (!vistazo) {
         //37 izquierda, 39 derecha, 38 arriba, 40 abajo
         if (key === 39) {
             derecha();
@@ -180,9 +181,14 @@ function movimientoPacman(){
         if (key === 38) {
             arriba();
         }
-    }
     keyBackup = key;
     barreraBool = false;
+}
+function vistazoBarrera() {
+    detectarBarrera();
+    if (barreraBool) {
+        key = keyBackup;
+    } else vistazo = false
 }
 
 function izquierda() {
@@ -224,12 +230,73 @@ function abajo() {
 
 //Movimientos fantasma blinky
 function movimientoFantasma(){
-    izquierdaFantasma();
+    let xTempFantasma = xActBlinky;
+    let yTempFantasma = yActBlinky;
+
+    //detectarBarreraFantasma();
+    console.log(barreraFantasma, prediccion, prediccionBackup);
+
+    if (barreraFantasma && prediccionBackup === prediccion){
+        while (prediccionBackup === prediccion){
+            prediccion = Math.floor(Math.random()*4)+1
+        }
+    }
+
+    if (prediccion===1){
+        xActBlinky +=blinkyMov;
+        vistazoBarreraFantasma();
+        xActBlinky = xTempFantasma;
+    }
+
+    if (prediccion===2){
+        xActBlinky -=blinkyMov;
+        vistazoBarreraFantasma();
+        xActBlinky = xTempFantasma;
+    }
+
+    if (prediccion===3){
+        yActBlinky +=blinkyMov;
+        vistazoBarreraFantasma();
+        yActBlinky = yTempFantasma;
+    }
+
+    if (prediccion===4){
+        yActBlinky -=blinkyMov;
+        vistazoBarreraFantasma();
+        yActBlinky = yTempFantasma;
+    }
+
+    if (prediccion !== prediccionBackup && barreraFantasma){
+        barreraFantasma = !barreraFantasma;
+    }
+
+    if (prediccion===1){
+        derechaFantasma();
+    }
+    if (prediccion ===2){
+        izquierdaFantasma();
+    }
+    if (prediccion ===3){
+        abajoFantasma();
+    }
+    if (prediccion ===4){
+        arribaFantasma();
+    }
+    prediccionBackup = prediccion;
+    barreraBool = false;
+
+}
+
+function vistazoBarreraFantasma(){
+    detectarBarreraFantasma();
+    if (barreraFantasma){
+        prediccion = prediccionBackup;
+    }
 }
 
 function izquierdaFantasma() {
-    ctx.drawImage(blinkyIzquierda,blinkyInc , 0, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((xActBlinky > 0)) {
+    ctx.drawImage(blinkyIzquierda,blinkyInc , 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
+    if ((xActBlinky > 0) && !barreraFantasma) {
         xActBlinky -= blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 0;
@@ -237,27 +304,27 @@ function izquierdaFantasma() {
 }
 
 function derechaFantasma() {
-    ctx.drawImage(blinkyDerecha, blinkyInc, derechaY, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((xActBlinky < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
-        xActBlinky += pacmanCantiMov;
+    ctx.drawImage(blinkyDerecha, blinkyInc, derechaY, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam) ;
+    if ((xActBlinky < x - (blinkyTam + blinkyMov)) && !barreraFantasma) {
+        xActBlinky += blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 16;
     if (blinkyInc > 16) blinkyInc = 0;
 }
 
 function arribaFantasma() {
-    ctx.drawImage(blinkyArriba, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((yActual > 0 && yActual < barrera) && !barreraBool) {
-        yActual -= pacmanCantiMov;
+    ctx.drawImage(blinkyArriba, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam) ;
+    if ((yActBlinky > 0 && yActBlinky < barrera) && !barreraFantasma) {
+        yActBlinky -= blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 16;
     if (blinkyInc > 16) blinkyInc = 0;
 }
 
 function abajoFantasma() {
-    ctx.drawImage(blinkyAbajo, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
-        yActual += blinkyMov;
+    ctx.drawImage(blinkyAbajo, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
+    if ((yActBlinky < y - (blinkyTam+ blinkyMov)) && !barreraFantasma) {
+        yActBlinky += blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 16;
     if (blinkyInc > 16) blinkyInc = 0;
@@ -270,20 +337,17 @@ function abajoFantasma() {
 
 function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.log(xActual, yActual);
     pantallaCarga();
     dibujaBarrera();
     detectarBarrera();
     dibujarMarcador();
-    movimientoPacman();
     movimientoFantasma();
+    movimientoPacman();
+
 }
 
-function vistazoBarrera() {
-    detectarBarrera();
-    if (barreraBool) {
-        key = keyBackup;
-    } else vistazo = false
-}
+
 
 /*
     Mapeado de los elementos del tile
@@ -321,9 +385,6 @@ let barrerasMatriz =
 
 //En esta seccion del codigo encontraremos los casos para los escenarios segun el nivel, como ahora no existe tal situacion
 //se encontraran datos sobre las pruebas para la deteccion de barreras y otros casos a determinar
-function dibujaEscenario() {
-    dibujaBarrera();
-}
 
 function dibujaBarrera() {
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
@@ -336,7 +397,6 @@ function dibujaBarrera() {
                 accesoBloque.y = yBarrera;
                 ctx.beginPath();
                 ctx.drawImage(imgTile, coord[accesoBloque.tipo][0], coord[accesoBloque.tipo][1], 7, 7, xBarrera, yBarrera, 18, 18)
-                //ctx.drawImage(imgTile, tipo[accesoBloque.tileF][accesoBloque.tileC][0], tipo[accesoBloque.tipo + 1], tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3], xBarrera, yBarrera + accesoBloque.separacion, tipo[accesoBloque.tipo + 2], tipo[accesoBloque.tipo + 3]);
                 ctx.fillStyle = "blue";
                 ctx.fill();
                 ctx.closePath();
@@ -398,17 +458,11 @@ function detectarBarreraFantasma(){
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
             let accesoBloque = barrerasMatriz[nivel][c][r];
-            //if ((xActual >= accesoBloque.x - pacmanTam/2 - 3) && yActual <= accesoBloque.y  && (xActual <= accesoBloque.x  && yActual >= accesoBloque.y - pacmanTam/2 - 3) && accesoBloque.tipo >=0 ){
             if (accesoBloque.tipo >= 0) {
-                /*                rect1.x < rect2.x + rect2.w &&
-                                rect1.x + rect1.w > rect2.x &&
-                                rect1.y < rect2.y + rect2.h &&
-                                rect1.h + rect1.y > rect2.y*/
-                //if (xActual >= accesoBloque.x-newTam && yActual <= accesoBloque.y +7  && xActual <= accesoBloque.x + 7 && yActual >= accesoBloque.y -newTam+7 ){
-                if (accesoBloque.x < xActBlinky + pacmanTamIrrY && accesoBloque.x + pacmanTamIrrY > xActBlinky && accesoBloque.y < yActBlinky + pacmanTamIrrX && pacmanTamIrrY + accesoBloque.y > yActBlinky) {
-                    return barreraBool = true;
+                if (accesoBloque.x < xActBlinky +12   && accesoBloque.x + 12  > xActBlinky && accesoBloque.y < yActBlinky + 12 &&  12+accesoBloque.y > yActBlinky) {
+                    return barreraFantasma = true;
                 }
-                barreraBool = false;
+                barreraFantasma = false;
             }
 
         }
