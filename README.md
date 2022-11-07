@@ -8,7 +8,7 @@
 
    * Implementacion del videojuego Pac-man haciendo uso del componente canvas y funciones del lenguaje de pprogramcion
     Javascript. Por lo que se despliega en la web.
-   * Versión: 0.7
+   * Versión: 1.0
 
 *Sobre el autor*
 
