@@ -23,6 +23,7 @@
 4. [Herramientas utilizadas](#4)
 5. [Instalacion](#5)
 6. [Consulta de documentación](#6)
+7. [Uso de HTML y CSS](#7)
 
 ***
 
