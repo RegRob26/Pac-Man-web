@@ -71,12 +71,34 @@ let yActBlinky = 125;
 let barreraFantasma = false;
 let prediccion = 2;
 let prediccionBackup = 2;
+
+//Pinky
+let pinkyArriba = new Image();
+let pinkyAbajo = new Image();
+let pinkyDerecha = new Image();
+let pinkyIzquierda = new Image();
+
+pinkyArriba.src = "imagenes/pinky_up.png";
+pinkyDerecha.src = "imagenes/pinky_right.png";
+pinkyAbajo.src = "imagenes/pinky_down.png";
+pinkyIzquierda.src = "imagenes/pinky_left.png";
+
+let pinkyTam = 20;
+let pinkyMov = 3.25;
+let pinkyInc = 20;
+
+let xActPinky = 380;
+let yActPinky = 125;
+
+let barreraFantasmaPinky = false;
+let prediccionPinky = 1;
+let prediccionPinkyBackup = 1;
 //Fin de carga fantasmas
 
 //Zona variables pacman
 let choqueFantasma = false;
 let vidas = 2;
-
+let incNivel = 250;
 
 let decisionAudio = true;
 let x = canvas.width;
@@ -116,7 +138,6 @@ let totalPuntos = 0;
 let barrerasMatriz =
     [
         [
-            //   0               1           2           3           4           5           6           7           8               9       10              11          12          13          14      15          16           17            18          19           20          21          22          23          24          25          26          27
             [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
             [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
             [{tipo: 1}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 8}, {tipo: 9}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 0,},],
@@ -132,8 +153,8 @@ let barrerasMatriz =
             [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}]
         ],
         [
-        //   0               1           2           3           4           5           6           7           8               9       10              11          12          13          14      15          16           17            18          19           20          21          22          23          24          25          26          27
-        [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
+            //   0               1           2           3           4           5           6           7           8               9       10              11          12          13          14      15          16           17            18          19           20          21          22          23          24          25          26          27
+            [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
             [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
             [{tipo: 1}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 8}, {tipo: 9}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 0,},],
             [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
@@ -142,9 +163,39 @@ let barrerasMatriz =
             [{tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
             [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -2}, {tipo: -2}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
             [{tipo: 3}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14,}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
-            [{tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 20,}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
-            [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
-            [{tipo: 5}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 4,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 20,}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
+            [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 0}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 23}, {tipo: 14}, {tipo: 14}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 1}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: 20}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27}, {tipo: 26}, {tipo: -1,}, {tipo: 27}, {tipo: 20}, {tipo: 20}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 23}, {tipo: 38,}, {tipo: -1}, {tipo: -2}, {tipo: -2}, {tipo: -1,}, {tipo: 23}, {tipo: 38}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 2}, {tipo: 3,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 2}, {tipo: 3}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: 14}, {tipo: 14}, {tipo: 14,}, {tipo: 14}, {tipo: 4}, {tipo: -1}, {tipo: 27,}, {tipo: 26}, {tipo: -1}, {tipo: 27}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 27}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 26}, {tipo: -1}, {tipo: 5}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 5}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 6}, {tipo: 7}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 4,},],
+            [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}]
+        ],
+        [
+            //   0               1           2           3           4           5           6           7           8               9       10              11          12          13          14      15          16           17            18          19           20          21          22          23          24          25          26          27
+            [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
+            [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}],
+            [{tipo: 1}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 8}, {tipo: 9}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 0,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 23,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: 25}, {tipo: -2,}, {tipo: -2}, {tipo: 24}, {tipo: -1}, {tipo: 25,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 24,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 25}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: 24}, {tipo: -1}, {tipo: 25}, {tipo: -2,}, {tipo: -2}, {tipo: 24}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
+            [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -2}, {tipo: -2}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14}, {tipo: 14,}, {tipo: 38}, {tipo: -1}, {tipo: 23,}, {tipo: 38}, {tipo: -1}, {tipo: 23}, {tipo: 14,}, {tipo: 14}, {tipo: 38}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27}, {tipo: 20,}, {tipo: 20}, {tipo: 20}, {tipo: 20}, {tipo: 20,}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 27,}, {tipo: 20}, {tipo: 20}, {tipo: 26,}, {tipo: -1}, {tipo: 2},],
+            [{tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: 10}, {tipo: 10}, {tipo: 10,}, {tipo: 10}, {tipo: 0}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: 14}, {tipo: 14}, {tipo: 38,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 23}, {tipo: 14}, {tipo: 14}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 1}, {tipo: 10,}, {tipo: 10}, {tipo: 10}, {tipo: 10}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: 20}, {tipo: 20}, {tipo: 26}, {tipo: -1}, {tipo: 27}, {tipo: 26}, {tipo: -1,}, {tipo: 27}, {tipo: 20}, {tipo: 20}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 23}, {tipo: 38,}, {tipo: -1}, {tipo: -2}, {tipo: -2}, {tipo: -1,}, {tipo: 23}, {tipo: 38}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2,}, {tipo: -2}, {tipo: 2}, {tipo: -1},{tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 2}, {tipo: 3,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 2}, {tipo: 3}, {tipo: -1}, {tipo: 2,}, {tipo: 3}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2}, {tipo: -1}, {tipo: 27,}, {tipo: 26}, {tipo: -1}, {tipo: 27}, {tipo: 26,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: 27}, {tipo: 26}, {tipo: -1}, {tipo: 27,}, {tipo: 26}, {tipo: -1}, {tipo: 3}, {tipo: -2,}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: 2}, {tipo: 3}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: -1}, {tipo: -1,}, {tipo: -1}, {tipo: -1}, {tipo: 3}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: -2}, {tipo: 2,},],
+            [{tipo: 5}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 6}, {tipo: 7}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 12,}, {tipo: 12}, {tipo: 12}, {tipo: 12}, {tipo: 4,},],
             [{tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}, {tipo: 100}]
         ]
     ]
@@ -161,7 +212,6 @@ function pantallaCarga() {
         inicioJuego.play()
     }
 }
-
 
 function decisionPantallas() {
     if (cargaPantalla) {
@@ -292,6 +342,14 @@ function colisionConFantasma() {
     }
 }
 
+function colisionConFantasmaPinky() {
+    if (xActPinky < xActual + 12 && xActPinky + 12 > xActual && yActPinky < yActual + blinkyTam && blinkyTam + yActPinky > yActual) {
+        choqueFantasma = true;
+        dibujarMuertePacman();
+    }
+}
+
+
 function dibujarMuertePacman() {
     if (cambio <= 12) {
         muerteSonido.play();
@@ -312,7 +370,7 @@ function dibujaVidas() {
     if (vidas >= 0) {
         let contador = 0;
         while (contador <= vidas) {
-            ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador * 16, 250, 16, 16);
+            ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador * 16,incNivel, 16, 16);
             contador++;
         }
     } else {
@@ -377,12 +435,15 @@ function reinicio() {
 function subirNivel() {
     console.log("total puntos", totalPuntos);
     if (totalPuntos === 0){
-        ctx.font = "30px pacman";
-        ctx.fillStyle = "white";
-        ctx.fillText("LEVEL UP", 200, 100);
-        subirNivelBool = true;
-        reinicio();
+           ctx.font = "30px pacman";
+           ctx.fillStyle = "white";
+           ctx.fillText("LEVEL UP", 200, 100);
+           subirNivelBool = true;
+           blinkyMov += 1;
+           incNivel = 350;
+           reinicio();
     }
+
 }
 
 
@@ -490,8 +551,113 @@ function abajoFantasma() {
     if (blinkyInc > 16) blinkyInc = 0;
 }
 
+
 //Fin de movimientos blinky
 
+//Movimientos fantasma pinky
+
+function movimientoFantasmaPinky() {
+    let xTempFantasma = xActPinky;
+    let yTempFantasma = yActPinky;
+    console.log("Mostrando datos de pinky", xActPinky, yActPinky);
+    console.log("Mostrando datos de blinky", xActBlinky, yActBlinky);
+
+    //detectarBarreraFantasma();
+    if (!choqueFantasma) {
+        if (barreraFantasmaPinky && prediccionPinkyBackup === prediccionPinky) {
+            while (prediccionPinkyBackup === prediccionPinky) {
+                prediccionPinky = Math.floor(Math.random() * 4) + 1
+            }
+        }
+
+        if (prediccionPinky === 1) {
+            xActPinky += blinkyMov;
+            vistazoBarreraFantasmaPinky();
+            xActPinky = xTempFantasma;
+        }
+
+        if (prediccionPinky === 2) {
+            xActPinky -= blinkyMov;
+            vistazoBarreraFantasmaPinky();
+            xActPinky = xTempFantasma;
+        }
+
+        if (prediccionPinky === 3) {
+            yActPinky += blinkyMov;
+            vistazoBarreraFantasmaPinky();
+            yActPinky = yTempFantasma;
+        }
+
+        if (prediccionPinky === 4) {
+            yActPinky -= blinkyMov;
+            vistazoBarreraFantasmaPinky();
+            yActPinky = yTempFantasma;
+        }
+
+        if (prediccionPinky !== prediccionPinkyBackup && barreraFantasmaPinky) {
+            barreraFantasmaPinky = !barreraFantasmaPinky;
+        }
+
+        if (prediccionPinky === 1) {
+            derechaFantasmaPinky();
+        }
+        if (prediccionPinky === 2) {
+            izquierdaFantasmaPinky();
+        }
+        if (prediccionPinky === 3) {
+            abajoFantasmaPinky();
+        }
+        if (prediccionPinky === 4) {
+            arribaFantasmaPinky();
+        }
+        prediccionPinkyBackup = prediccionPinky;
+        barreraBool = false;
+    }
+}
+
+function vistazoBarreraFantasmaPinky() {
+    detectarBarreraFantasmaPinky();
+    if (barreraFantasmaPinky) {
+        prediccionPinky = prediccionPinkyBackup;
+    }
+}
+function izquierdaFantasmaPinky() {
+    ctx.drawImage(pinkyIzquierda, pinkyInc, 0, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
+    if ((xActPinky > 0) && !barreraFantasmaPinky) {
+        xActPinky -= blinkyMov;
+        pinkyInc += 16;
+    } else pinkyInc = 0;
+    if (pinkyInc > 16) pinkyInc = 0;
+}
+
+function derechaFantasmaPinky() {
+    ctx.drawImage(pinkyDerecha, pinkyInc, derechaY, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
+    if ((xActPinky < x - (blinkyTam + blinkyMov)) && !barreraFantasmaPinky) {
+        xActPinky += blinkyMov;
+        pinkyInc += 16;
+    } else pinkyInc = 16;
+    if (pinkyInc > 16) pinkyInc = 0;
+}
+
+function arribaFantasmaPinky() {
+    ctx.drawImage(pinkyArriba, pinkyInc, 0, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
+    if ((yActPinky > 0 && yActPinky < barrera) && !barreraFantasmaPinky) {
+        yActPinky -= blinkyMov;
+        pinkyInc += 16;
+    } else pinkyInc = 16;
+    if (pinkyInc > 16) pinkyInc = 0;
+}
+
+function abajoFantasmaPinky() {
+    ctx.drawImage(pinkyAbajo, pinkyInc, 0, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
+    if ((yActPinky < y - (blinkyTam + blinkyMov)) && !barreraFantasmaPinky) {
+        yActPinky += blinkyMov;
+        pinkyInc += 16;
+    } else pinkyInc = 16;
+    if (pinkyInc > 16) pinkyInc = 0;
+}
+
+//Fin de movimientos pinky
 
 function dibujar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -500,17 +666,24 @@ function dibujar() {
     if (!finJuego) {
         pantallaCarga();
         dibujaBarrera();
-//        detectarBarrera();
         dibujarMarcador();
         movimientoFantasma();
+        movimientoFantasmaPinky();
         colisionConFantasma();
+        colisionConFantasmaPinky();
         movimientoPacman();
         dibujaVidas();
         subirNivel();
 
-    } else {
+    }
+    else {
         dibujaBarrera();
         gameOver();
+    }
+    if (nivel > 2){
+        ctx.font = "30px pacman";
+        ctx.fillStyle = "white";
+        ctx.fillText("Fin del Juego", canvas.width / 2 - 170, 350);
     }
 }
 
@@ -530,7 +703,6 @@ function dibujaBarrera() {
     let recuentoPuntos = 0;
     for (c = 0; c < barrerasMatriz[nivel].length; c++) {
         for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
-
             if (barrerasMatriz[nivel][c][r].tipo >= 0 && barrerasMatriz[nivel][c][r].tipo <= 99) {
                 let accesoBloque = barrerasMatriz[nivel][c][r];
                 let xBarrera = (r * 18);
@@ -553,9 +725,7 @@ function dibujaBarrera() {
                     ctx.beginPath();
                     ctx.drawImage(punto, 0, 0, 8, 8, xBarrera, yBarrera, 6, 6)
                     ctx.closePath();
-
                 }
-
             }
         }
     }
@@ -579,7 +749,7 @@ function detectarBarrera() {
                 barreraBool = false;
             } else {
                 if (accesoBloque.tipo === -1) {
-                    if (accesoBloque.x < xActual + pacmanTam && accesoBloque.x + pacmanTam > xActual && accesoBloque.y < yActual + pacmanTam && pacmanTam + accesoBloque.y > yActual) {
+                    if (accesoBloque.x < xActual + pacmanTam  && accesoBloque.x + pacmanTam> xActual && accesoBloque.y < yActual + pacmanTam && pacmanTam + accesoBloque.y > yActual) {
                         marcador += 1;
                         accesoBloque.tipo = -2;
                         if (decisionAudio) {
@@ -608,11 +778,23 @@ function detectarBarreraFantasma() {
                 }
                 barreraFantasma = false;
             }
-
         }
     }
 }
 
+function detectarBarreraFantasmaPinky() {
+    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
+        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
+            let accesoBloque = barrerasMatriz[nivel][c][r];
+            if (accesoBloque.tipo >= 0) {
+                if (accesoBloque.x < xActPinky + 12 && accesoBloque.x + 12 > xActPinky && accesoBloque.y < yActPinky + 12 && 12 + accesoBloque.y > yActPinky) {
+                    return barreraFantasmaPinky = true;
+                }
+                barreraFantasmaPinky = false;
+            }
+        }
+    }
+}
 
 function dibujarMarcador() {
     ctx.font = "10px pacman";
