@@ -439,7 +439,7 @@ function subirNivel() {
            ctx.fillStyle = "white";
            ctx.fillText("LEVEL UP", 200, 100);
            subirNivelBool = true;
-           blinkyMov += 1;
+           blinkyMov += 0.6;
            incNivel = 350;
            reinicio();
     }
