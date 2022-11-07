@@ -98,7 +98,7 @@ let prediccionPinkyBackup = 1;
 //Zona variables pacman
 let choqueFantasma = false;
 let vidas = 2;
-
+let incNivel = 250;
 
 let decisionAudio = true;
 let x = canvas.width;
@@ -370,7 +370,7 @@ function dibujaVidas() {
     if (vidas >= 0) {
         let contador = 0;
         while (contador <= vidas) {
-            ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador * 16, 250, 16, 16);
+            ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador * 16,incNivel, 16, 16);
             contador++;
         }
     } else {
@@ -435,12 +435,21 @@ function reinicio() {
 function subirNivel() {
     console.log("total puntos", totalPuntos);
     if (totalPuntos === 0){
-        ctx.font = "30px pacman";
-        ctx.fillStyle = "white";
-        ctx.fillText("LEVEL UP", 200, 100);
-        subirNivelBool = true;
-        blinkyMov += 1;
-        reinicio();
+       if (nivel < 3){
+           ctx.font = "30px pacman";
+           ctx.fillStyle = "white";
+           ctx.fillText("LEVEL UP", 200, 100);
+           subirNivelBool = true;
+           blinkyMov += 1;
+           incNivel = 350;
+           reinicio();
+
+       }
+       else{
+           ctx.font = "30px pacman";
+           ctx.fillStyle = "white";
+           ctx.fillText("Fin del Juego", canvas.width / 2 - 170, 350);
+       }
     }
 }
 
