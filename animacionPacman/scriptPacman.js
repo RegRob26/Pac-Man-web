@@ -435,7 +435,6 @@ function reinicio() {
 function subirNivel() {
     console.log("total puntos", totalPuntos);
     if (totalPuntos === 0){
-       if (nivel < 3){
            ctx.font = "30px pacman";
            ctx.fillStyle = "white";
            ctx.fillText("LEVEL UP", 200, 100);
@@ -443,14 +442,8 @@ function subirNivel() {
            blinkyMov += 1;
            incNivel = 350;
            reinicio();
-
-       }
-       else{
-           ctx.font = "30px pacman";
-           ctx.fillStyle = "white";
-           ctx.fillText("Fin del Juego", canvas.width / 2 - 170, 350);
-       }
     }
+
 }
 
 
@@ -682,9 +675,15 @@ function dibujar() {
         dibujaVidas();
         subirNivel();
 
-    } else {
+    }
+    else {
         dibujaBarrera();
         gameOver();
+    }
+    if (nivel > 2){
+        ctx.font = "30px pacman";
+        ctx.fillStyle = "white";
+        ctx.fillText("Fin del Juego", canvas.width / 2 - 170, 350);
     }
 }
 
