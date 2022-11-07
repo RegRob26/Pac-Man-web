@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scriptPacman.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scriptPacman.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Componente canvas que nos permite dibujar en la página
  * @type {HTMLElement}
  */
@@ -256,7 +284,7 @@ setInterval(dibujar, 40, key)
 
 * */
 function pantallaCarga() {
-    if (indice < 200) {
+    if (indice &lt; 200) {
         /** Permite difuminar la imagen que se está dibujando.
          * @name ctx.globalAlpha
          * @param cantidad - 0-1
@@ -346,7 +374,7 @@ function movimientoPacman() {
             vistazoBarrera();
             yActual = yTempPacman;
         }
-        if (key !== keyBackup && barreraBool) {
+        if (key !== keyBackup &amp;&amp; barreraBool) {
             barreraBool = !barreraBool
         }
 
@@ -411,7 +439,7 @@ function vistazoBarrera() {
 
 function izquierda() {
     ctx.drawImage(izquierdaPacman, izquierdaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((xActual > 0) && !barreraBool) {
+    if ((xActual > 0) &amp;&amp; !barreraBool) {
         xActual -= pacmanCantiMov;
         inc += cantInc - 4;
     } else inc = cantInc - 4;
@@ -423,7 +451,7 @@ function izquierda() {
  */
 function derecha() {
     ctx.drawImage(derechaPacman, derechaX + inc, derechaY, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((xActual < x - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+    if ((xActual &lt; x - (pacmanTam + pacmanCantiMov)) &amp;&amp; !barreraBool) {
         xActual += pacmanCantiMov;
         inc += cantInc - 4;
     } else inc = 16;
@@ -435,7 +463,7 @@ function derecha() {
  */
 function arriba() {
     ctx.drawImage(arribaPacman, arribaX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((yActual > 0 && yActual < barrera) && !barreraBool) {
+    if ((yActual > 0 &amp;&amp; yActual &lt; barrera) &amp;&amp; !barreraBool) {
         yActual -= pacmanCantiMov;
         inc += cantInc - 4;
     } else inc = cantInc - 4;
@@ -447,7 +475,7 @@ function arriba() {
  */
 function abajo() {
     ctx.drawImage(abajoPacman, abajoX + inc, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
-    if ((yActual < y - (pacmanTam + pacmanCantiMov)) && !barreraBool) {
+    if ((yActual &lt; y - (pacmanTam + pacmanCantiMov)) &amp;&amp; !barreraBool) {
         yActual += pacmanCantiMov;
         inc += cantInc - 4;
     } else inc = cantInc - 4;
@@ -465,7 +493,7 @@ function abajo() {
  * @function colisionConFantasma
  */
 function colisionConFantasma() {
-    if (xActBlinky < xActual + 12 && xActBlinky + 12 > xActual && yActBlinky < yActual + blinkyTam && blinkyTam + yActBlinky > yActual) {
+    if (xActBlinky &lt; xActual + 12 &amp;&amp; xActBlinky + 12 > xActual &amp;&amp; yActBlinky &lt; yActual + blinkyTam &amp;&amp; blinkyTam + yActBlinky > yActual) {
         choqueFantasma = true;
         dibujarMuertePacman();
     }
@@ -475,7 +503,7 @@ function colisionConFantasma() {
 *  @function colisionConFantasmaPinky
 */
 function colisionConFantasmaPinky() {
-    if (xActPinky < xActual + 12 && xActPinky + 12 > xActual && yActPinky < yActual + blinkyTam && blinkyTam + yActPinky > yActual) {
+    if (xActPinky &lt; xActual + 12 &amp;&amp; xActPinky + 12 > xActual &amp;&amp; yActPinky &lt; yActual + blinkyTam &amp;&amp; blinkyTam + yActPinky > yActual) {
         choqueFantasma = true;
         dibujarMuertePacman();
     }
@@ -488,7 +516,7 @@ function colisionConFantasmaPinky() {
  * @function dibujarMuertePacman
  */
 function dibujarMuertePacman() {
-    if (cambio <= 12) {
+    if (cambio &lt;= 12) {
         muerteSonido.play();
         ctx.drawImage(muertePacman, cambio * 16, 0, 16, 16, xActual, yActual, pacmanTam + aumentoTam, pacmanTam + aumentoTam);
         cambio += 1;
@@ -514,7 +542,7 @@ function dibujarMuertePacman() {
 function dibujaVidas() {
     if (vidas >= 0) {
         let contador = 0;
-        while (contador <= vidas) {
+        while (contador &lt;= vidas) {
             ctx.drawImage(vidaExtra, 0, 0, 16, 16, contador * 16,incNivel, 16, 16);
             contador++;
         }
@@ -632,7 +660,7 @@ function movimientoFantasma() {
     let yTempFantasma = yActBlinky;
 
     if (!choqueFantasma) {
-        if (barreraFantasma && prediccionBackup === prediccion) {
+        if (barreraFantasma &amp;&amp; prediccionBackup === prediccion) {
             while (prediccionBackup === prediccion) {
                 prediccion = Math.floor(Math.random() * 4) + 1
             }
@@ -662,7 +690,7 @@ function movimientoFantasma() {
             yActBlinky = yTempFantasma;
         }
 
-        if (prediccion !== prediccionBackup && barreraFantasma) {
+        if (prediccion !== prediccionBackup &amp;&amp; barreraFantasma) {
             barreraFantasma = !barreraFantasma;
         }
 
@@ -699,7 +727,7 @@ function vistazoBarreraFantasma() {
  */
 function izquierdaFantasma() {
     ctx.drawImage(blinkyIzquierda, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((xActBlinky > 0) && !barreraFantasma) {
+    if ((xActBlinky > 0) &amp;&amp; !barreraFantasma) {
         xActBlinky -= blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 0;
@@ -711,7 +739,7 @@ function izquierdaFantasma() {
  */
 function derechaFantasma() {
     ctx.drawImage(blinkyDerecha, blinkyInc, derechaY, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((xActBlinky < x - (blinkyTam + blinkyMov)) && !barreraFantasma) {
+    if ((xActBlinky &lt; x - (blinkyTam + blinkyMov)) &amp;&amp; !barreraFantasma) {
         xActBlinky += blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 16;
@@ -723,7 +751,7 @@ function derechaFantasma() {
  */
 function arribaFantasma() {
     ctx.drawImage(blinkyArriba, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((yActBlinky > 0 && yActBlinky < barrera) && !barreraFantasma) {
+    if ((yActBlinky > 0 &amp;&amp; yActBlinky &lt; barrera) &amp;&amp; !barreraFantasma) {
         yActBlinky -= blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 16;
@@ -735,7 +763,7 @@ function arribaFantasma() {
  */
 function abajoFantasma() {
     ctx.drawImage(blinkyAbajo, blinkyInc, 0, 16, 16, xActBlinky, yActBlinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((yActBlinky < y - (blinkyTam + blinkyMov)) && !barreraFantasma) {
+    if ((yActBlinky &lt; y - (blinkyTam + blinkyMov)) &amp;&amp; !barreraFantasma) {
         yActBlinky += blinkyMov;
         blinkyInc += 16;
     } else blinkyInc = 16;
@@ -757,7 +785,7 @@ function movimientoFantasmaPinky() {
 
 
     if (!choqueFantasma) {
-        if (barreraFantasmaPinky && prediccionPinkyBackup === prediccionPinky) {
+        if (barreraFantasmaPinky &amp;&amp; prediccionPinkyBackup === prediccionPinky) {
             while (prediccionPinkyBackup === prediccionPinky) {
                 prediccionPinky = Math.floor(Math.random() * 4) + 1
             }
@@ -787,7 +815,7 @@ function movimientoFantasmaPinky() {
             yActPinky = yTempFantasma;
         }
 
-        if (prediccionPinky !== prediccionPinkyBackup && barreraFantasmaPinky) {
+        if (prediccionPinky !== prediccionPinkyBackup &amp;&amp; barreraFantasmaPinky) {
             barreraFantasmaPinky = !barreraFantasmaPinky;
         }
 
@@ -820,7 +848,7 @@ function vistazoBarreraFantasmaPinky() {
  */
 function izquierdaFantasmaPinky() {
     ctx.drawImage(pinkyIzquierda, pinkyInc, 0, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((xActPinky > 0) && !barreraFantasmaPinky) {
+    if ((xActPinky > 0) &amp;&amp; !barreraFantasmaPinky) {
         xActPinky -= blinkyMov;
         pinkyInc += 16;
     } else pinkyInc = 0;
@@ -832,7 +860,7 @@ function izquierdaFantasmaPinky() {
  */
 function derechaFantasmaPinky() {
     ctx.drawImage(pinkyDerecha, pinkyInc, derechaY, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((xActPinky < x - (blinkyTam + blinkyMov)) && !barreraFantasmaPinky) {
+    if ((xActPinky &lt; x - (blinkyTam + blinkyMov)) &amp;&amp; !barreraFantasmaPinky) {
         xActPinky += blinkyMov;
         pinkyInc += 16;
     } else pinkyInc = 16;
@@ -844,7 +872,7 @@ function derechaFantasmaPinky() {
  */
 function arribaFantasmaPinky() {
     ctx.drawImage(pinkyArriba, pinkyInc, 0, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((yActPinky > 0 && yActPinky < barrera) && !barreraFantasmaPinky) {
+    if ((yActPinky > 0 &amp;&amp; yActPinky &lt; barrera) &amp;&amp; !barreraFantasmaPinky) {
         yActPinky -= blinkyMov;
         pinkyInc += 16;
     } else pinkyInc = 16;
@@ -856,7 +884,7 @@ function arribaFantasmaPinky() {
  */
 function abajoFantasmaPinky() {
     ctx.drawImage(pinkyAbajo, pinkyInc, 0, 16, 16, xActPinky, yActPinky, blinkyTam + aumentoTam, blinkyTam + aumentoTam);
-    if ((yActPinky < y - (blinkyTam + blinkyMov)) && !barreraFantasmaPinky) {
+    if ((yActPinky &lt; y - (blinkyTam + blinkyMov)) &amp;&amp; !barreraFantasmaPinky) {
         yActPinky += blinkyMov;
         pinkyInc += 16;
     } else pinkyInc = 16;
@@ -916,9 +944,9 @@ let coord = [
  */
 function dibujaBarrera() {
     let recuentoPuntos = 0;
-    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
-        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
-            if (barrerasMatriz[nivel][c][r].tipo >= 0 && barrerasMatriz[nivel][c][r].tipo <= 99) {
+    for (c = 0; c &lt; barrerasMatriz[nivel].length; c++) {
+        for (r = 0; r &lt; barrerasMatriz[nivel][c].length; r++) {
+            if (barrerasMatriz[nivel][c][r].tipo >= 0 &amp;&amp; barrerasMatriz[nivel][c][r].tipo &lt;= 99) {
                 let accesoBloque = barrerasMatriz[nivel][c][r];
                 let xBarrera = (r * 18);
                 let yBarrera = (c * 18);
@@ -945,9 +973,9 @@ function dibujaBarrera() {
 /**
  * Compara las posiciones de las barreras o los puntos con la posición actual de Pac-Man y determina si existe una colisión
  * Sigue la siguiente estructura para hacer la comparación
- *                                 rect1.x < rect2.x + rect2.w &&
- *                                 rect1.x + rect1.w > rect2.x &&
- *                                 rect1.y < rect2.y + rect2.h &&
+ *                                 rect1.x &lt; rect2.x + rect2.w &amp;&amp;
+ *                                 rect1.x + rect1.w > rect2.x &amp;&amp;
+ *                                 rect1.y &lt; rect2.y + rect2.h &amp;&amp;
  *                                 rect1.h + rect1.y > rect2.y
  * En caso de darse una colisión con una barrera, entonces encenderá una bander para indicar al programa principal la existencia
  * de la colisión.
@@ -955,21 +983,21 @@ function dibujaBarrera() {
  * @returns {boolean}
  */
 function detectarBarrera() {
-    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
-        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
+    for (c = 0; c &lt; barrerasMatriz[nivel].length; c++) {
+        for (r = 0; r &lt; barrerasMatriz[nivel][c].length; r++) {
             let accesoBloque = barrerasMatriz[nivel][c][r];
             if (accesoBloque.tipo >= 0) {
-                /*                rect1.x < rect2.x + rect2.w &&
-                                rect1.x + rect1.w > rect2.x &&
-                                rect1.y < rect2.y + rect2.h &&
+                /*                rect1.x &lt; rect2.x + rect2.w &amp;&amp;
+                                rect1.x + rect1.w > rect2.x &amp;&amp;
+                                rect1.y &lt; rect2.y + rect2.h &amp;&amp;
                                 rect1.h + rect1.y > rect2.y*/
-                if (accesoBloque.x < xActual + pacmanTamIrrY && accesoBloque.x + pacmanTamIrrY > xActual && accesoBloque.y < yActual + pacmanTamIrrX && pacmanTamIrrY + accesoBloque.y > yActual) {
+                if (accesoBloque.x &lt; xActual + pacmanTamIrrY &amp;&amp; accesoBloque.x + pacmanTamIrrY > xActual &amp;&amp; accesoBloque.y &lt; yActual + pacmanTamIrrX &amp;&amp; pacmanTamIrrY + accesoBloque.y > yActual) {
                     return barreraBool = true;
                 }
                 barreraBool = false;
             } else {
                 if (accesoBloque.tipo === -1) {
-                    if (accesoBloque.x < xActual + pacmanTam  && accesoBloque.x + pacmanTam> xActual && accesoBloque.y < yActual + pacmanTam && pacmanTam + accesoBloque.y > yActual) {
+                    if (accesoBloque.x &lt; xActual + pacmanTam  &amp;&amp; accesoBloque.x + pacmanTam> xActual &amp;&amp; accesoBloque.y &lt; yActual + pacmanTam &amp;&amp; pacmanTam + accesoBloque.y > yActual) {
                         marcador += 1;
                         accesoBloque.tipo = -2;
                         if (decisionAudio) {
@@ -994,11 +1022,11 @@ function detectarBarrera() {
  * @returns {boolean}
  */
 function detectarBarreraFantasma() {
-    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
-        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
+    for (c = 0; c &lt; barrerasMatriz[nivel].length; c++) {
+        for (r = 0; r &lt; barrerasMatriz[nivel][c].length; r++) {
             let accesoBloque = barrerasMatriz[nivel][c][r];
             if (accesoBloque.tipo >= 0) {
-                if (accesoBloque.x < xActBlinky + 12 && accesoBloque.x + 12 > xActBlinky && accesoBloque.y < yActBlinky + 12 && 12 + accesoBloque.y > yActBlinky) {
+                if (accesoBloque.x &lt; xActBlinky + 12 &amp;&amp; accesoBloque.x + 12 > xActBlinky &amp;&amp; accesoBloque.y &lt; yActBlinky + 12 &amp;&amp; 12 + accesoBloque.y > yActBlinky) {
                     return barreraFantasma = true;
                 }
                 barreraFantasma = false;
@@ -1014,11 +1042,11 @@ function detectarBarreraFantasma() {
  * @returns {boolean}
  */
 function detectarBarreraFantasmaPinky() {
-    for (c = 0; c < barrerasMatriz[nivel].length; c++) {
-        for (r = 0; r < barrerasMatriz[nivel][c].length; r++) {
+    for (c = 0; c &lt; barrerasMatriz[nivel].length; c++) {
+        for (r = 0; r &lt; barrerasMatriz[nivel][c].length; r++) {
             let accesoBloque = barrerasMatriz[nivel][c][r];
             if (accesoBloque.tipo >= 0) {
-                if (accesoBloque.x < xActPinky + 12 && accesoBloque.x + 12 > xActPinky && accesoBloque.y < yActPinky + 12 && 12 + accesoBloque.y > yActPinky) {
+                if (accesoBloque.x &lt; xActPinky + 12 &amp;&amp; accesoBloque.x + 12 > xActPinky &amp;&amp; accesoBloque.y &lt; yActPinky + 12 &amp;&amp; 12 + accesoBloque.y > yActPinky) {
                     return barreraFantasmaPinky = true;
                 }
                 barreraFantasmaPinky = false;
@@ -1044,4 +1072,26 @@ function dibujarMarcador() {
     ctx.fillStyle = "white";
     ctx.fillText(marcador, canvas.width / 2 - 5, 30);
 
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html">YTempPacman</a></li><li><a href="global.html#abajo">abajo</a></li><li><a href="global.html#abajoFantasma">abajoFantasma</a></li><li><a href="global.html#abajoFantasmaPinky">abajoFantasmaPinky</a></li><li><a href="global.html#arriba">arriba</a></li><li><a href="global.html#arribaFantasma">arribaFantasma</a></li><li><a href="global.html#arribaFantasmaPinky">arribaFantasmaPinky</a></li><li><a href="global.html#barrerasMatriz">barrerasMatriz</a></li><li><a href="global.html#blinkyArriba">blinkyArriba</a></li><li><a href="global.html#canvas">canvas</a></li><li><a href="global.html#colisionConFantasma">colisionConFantasma</a></li><li><a href="global.html#colisionConFantasmaPinky">colisionConFantasmaPinky</a></li><li><a href="global.html#derecha">derecha</a></li><li><a href="global.html#derechaFantasma">derechaFantasma</a></li><li><a href="global.html#derechaFantasmaPinky">derechaFantasmaPinky</a></li><li><a href="global.html#derechaPacman">derechaPacman</a></li><li><a href="global.html#detectarBarrera">detectarBarrera</a></li><li><a href="global.html#detectarBarreraFantasma">detectarBarreraFantasma</a></li><li><a href="global.html#detectarBarreraFantasmaPinky">detectarBarreraFantasmaPinky</a></li><li><a href="global.html#dibujaBarrera">dibujaBarrera</a></li><li><a href="global.html#dibujaVidas">dibujaVidas</a></li><li><a href="global.html#dibujar">dibujar</a></li><li><a href="global.html#dibujarMuertePacman">dibujarMuertePacman</a></li><li><a href="global.html#gameOver">gameOver</a></li><li><a href="global.html#globalAlpha">globalAlpha</a></li><li><a href="global.html#imgTile">imgTile</a></li><li><a href="global.html#izquierda">izquierda</a></li><li><a href="global.html#izquierdaFantasma">izquierdaFantasma</a></li><li><a href="global.html#izquierdaFantasmaPinky">izquierdaFantasmaPinky</a></li><li><a href="global.html#manejarTecladoAbajo">manejarTecladoAbajo</a></li><li><a href="global.html#movimientoFantasma">movimientoFantasma</a></li><li><a href="global.html#movimientoFantasmaPinky">movimientoFantasmaPinky</a></li><li><a href="global.html#movimientoPacman">movimientoPacman</a></li><li><a href="global.html#pacmanCantiMov">pacmanCantiMov</a></li><li><a href="global.html#pantallaCarga">pantallaCarga</a></li><li><a href="global.html#punto">punto</a></li><li><a href="global.html#reinicio">reinicio</a></li><li><a href="global.html#subirNivel">subirNivel</a></li><li><a href="global.html#vistazoBarrera">vistazoBarrera</a></li><li><a href="global.html#vistazoBarreraFantasma">vistazoBarreraFantasma</a></li><li><a href="global.html">xTempPacman</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Nov 07 2022 04:16:37 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
