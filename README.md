@@ -89,7 +89,7 @@ siguientes pasos:
 
 2. Seleccionar el botón verde (code):
 
-![Image](/home/regrob261/Documentos/5_UTM/web/learnhtml5/htmlutm/work/videojuego/animacionPacman/imagenes/Screenshot_125.png)
+![Image](animacionPacman/imagenes/Screenshot_125.png)
 
 3. Copiar el link de la pestaña https:
 
