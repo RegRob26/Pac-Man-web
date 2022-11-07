@@ -90,11 +90,11 @@ siguientes pasos:
 
 2. Seleccionar el botón verde (code):
 
-![Image](animacionPacman/imagenes/Screenshot_125.png)
+![Image](imagenes/Screenshot_125.png)
 
 3. Copiar el link de la pestaña https:
 
-![Image](animacionPacman/out/styles/Screenshot_127.png)
+![Image](imagenes/Screenshot_127.png)
 
 4. Abrir una consola dentro de la computadora y ejecutar el siguiente comando
 *        git clone [link_del_paso_3]
